@@ -58,6 +58,7 @@ now update the apt library:
 then restart the computer and the wifi light should come on
 
 **example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):**
+
 edit the `/etc/apt/sources.list` file. replace line
 
     deb http://ftp.au.debian.org/debian/ wheezy main contrib non-free
