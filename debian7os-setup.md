@@ -174,11 +174,11 @@ if the file does not exist then:
 
     svn checkout svn+ssh://bob@pcname/home/bob/repositories/config /home/bob
 
-update the dns ip address
+###### update the dns ip address
 
     sudo ln -sf ~/.resolv.conf /etc/resolv.conf
 
-now install the full version of vim:
+###### install and configure the full version of vim:
 
     sudo apt-get install vim
 
@@ -186,15 +186,18 @@ link the .vimrc file to the /root/ directory so that sudo vi has colors too:
 
     sudo ln -sf /home/bob/.vimrc /root/.vimrc
 
-stop the cursor from blinking (if using the gui gnome terminal)
+###### stop the cursor from blinking (if using the gui gnome terminal)
 
     gconftool-2 --set /apps/gnome-terminal/profiles/Default/cursor_blink_mode --type string off
 
-setup the tty font size to avoid eye strain:
+###### setup the tty font size to avoid eye strain:
 
     sudo dpkg-reconfigure console-setup
 
-choose: UTF-8, Combined - Latin, Fixed or Terminus, size 10x20
+choose
+
+    UTF-8, Combined - Latin, Fixed or Terminus, size 10x20
+
 if you choose one of the framebuffer font sizes then you will need to install the following extra package to make it work:
 
     sudo apt-get install kbd
@@ -215,11 +218,11 @@ install the terminus font for use in xterm:
 
     sudo apt-get install xfonts-terminus
 
-also test the column width in xterm. if it is too small then set it to some big number:
+###### test the column width in xterm. if it is too small then set it to some big number:
 
     stty cols 1800
 
-link the .bashrc file to the /root/ directory so that root has a pretty prompt:
+link the `.bashrc` file to the `/root/` directory so that root has a pretty prompt:
 
     sudo ln -sf /home/bob/.bashrc /root/.bashrc
 
@@ -231,11 +234,12 @@ then link the global crontab to the local crontab:
 
     sudo ln -sf /home/bob/.crontab /etc/crontab
 
-remove the nasty iceweasel web browser and all its dependencies:
+###### install a browser to surf the net and look for answers when stuck (and cat pictures)
+
+remove the nasty default iceweasel web browser and all its dependencies:
 
     sudo apt-get autoremove --purge iceweasel
 
-install chromium-browser to surf the net and look for answers when stuck (and cat pictures)
 chromium seems a bit quicker than mozilla iceweasel and supports things like pjax which iceweasel 17.0.9 does not
 first check to see what the latest version of chromium is called:
 
@@ -250,7 +254,9 @@ install both of these:
 
     sudo apt-get install chromium-browser chromium-browser-l10n
 
-install flash so that you can watch videos. first update /etc/apt/sources.list. replace line:
+###### install flash so that you can watch videos
+
+first update /etc/apt/sources.list. replace line:
 
     deb http://ftp.au.debian.org/debian/ wheezy main
 
@@ -266,11 +272,11 @@ then install flash:
 
     sudo apt-get install flashplugin-nonfree 
 
-install xorg so that startx works
+###### install xorg so that startx works
 
     sudo apt-get install xinit
 
-also install the mutter window manager:
+###### also install the mutter window manager:
 
     sudo apt-get install mutter
 
@@ -295,7 +301,7 @@ make sure that the screen configuration file exists
 
     vi ~/.screenrc
 
-make sure ssh is installed and linked to the correct sshd_config:
+###### make sure ssh is installed and linked to the correct sshd_config:
 
     sudo apt-get install ssh
     sudo ln -s /home/bob/.ssh/sshd_config /etc/ssh/sshd_config
@@ -307,19 +313,23 @@ if there are no ssh keys then generate some:
 place them in `~/.ssh/`
 copy the public key `~/.ssh/id_das.pub` into `~/.ssh/authorized_keys` on the remote machines to login to
 
-make sure the hosts file for this computer is correct. note that `/etc/hosts` cannot be removed first if you want to use sudo:
+###### make sure the hosts file for this computer is correct
+
+note that `/etc/hosts` cannot be removed first if you want to use sudo:
 
     sudo ln -sf /home/bob/.hosts_pcname /etc/hosts
 
-set up the network interfaces file to point at the dot file on the hard drive 
+###### set up the network interfaces file to point at the dot file on the hard drive 
 
     sudo ln -sf /home/bob/.interfaces_pcname /etc/network/interfaces
 
-now install the full version of vlc to watch movies:
+###### install the full version of vlc to watch movies:
 
     sudo apt-get install vlc
 
-now install skype. first setup debian multiarch so that it can run a 32 bit program on a 64 bit cpu:
+###### install skype
+
+first setup debian multiarch so that it can run a 32 bit program on a 64 bit cpu:
 
     sudo dpkg --add-architecture i386
     sudo apt-get update
@@ -331,15 +341,15 @@ then, download the i386 package into the /tmp/ dir and install:
     sudo dpkg -i skype-install.deb
     sudo apt-get -f install
 
-install vuze to get some torrent files:
+###### install vuze to get some torrent files
 
     sudo apt-get install vuze
 
-install zip so that you can zip/unzip saved files:
+###### install zip so that you can zip/unzip saved files
 
     sudo apt-get install zip
 
-install apache2
+###### install apache2
 
     sudo apt-get install apache2
 
@@ -387,8 +397,9 @@ now add your own user to the www-data group
 
 log out and log back in to be able to make changes
 
-set up an ssl certificate for your website. this allows you to send and receive encrypted data over http.
-first generate a private rsa (key) file
+###### set up an ssl certificate for your website
+
+this allows you to send and receive encrypted data over http. first generate a private rsa (key) file
 
     cd /etc/ssl/private
     openssl genrsa -out myhostname.com.key -des3 2048
@@ -413,12 +424,19 @@ for each of the prompts enter:
 * optional company name - to leave this field blank insert a full-stop and press enter
 
 navigate to startssl.com (or any other certificate authority) and sign up to get a p12 key to login
+
 select the option to generate a webserver certificate
+
 skip the step where you generate the private key (csr file) since this was already done at the start of the process
+
 copy your csr file and paste it into the website
+
 add the http://www.myhostname.com domain (if you want more subdomains you'll probably have to pay though)
+
 download the crt file and place it in `/etc/ssl/certs/myhostname.com.crt`
+
 if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`
+
 concatenate the crt and pem files:
 
     cat myhostname.com.crt myhostname.com.intermediate.pem > x
@@ -440,29 +458,33 @@ now open the apache2 config file (either `/etc/apache2/sites-enabled/000-default
     </VirtualHost>
 
 note that there may be other lines intersperced between these, however this does not matter, so long as these lines exist in this order somewhere within the file then the server certificate will work.
+
 now restart apache
 
     sudo /etc/init.d/apache2 restart
 
 and enter the password for your certificate key file
-if you see a fail message then apache may be using a default password. this is done using the SSLPassPhraseDialog in one of the config files. if you can't find which one then grep will find it for you:
+
+if you see a fail message then apache may be using a default password. this is done using the `SSLPassPhraseDialog` var, in one of the config files. if you can't find which one then grep will find it for you:
 
     cd /etc/apache2
     grep -ir sslpassphrasedialog *
 
 once you find this entry then comment it out with a #. then restart apache2 again and make sure it doesn't fail this time.
+
 to check that the certificate is recognized open your browser and navigate to `https://myhostname.com`. right click on the padlock and make sure the date of the certificate begins on the current date.
 
-install mysql:
+###### install mysql
 
     sudo apt-get install mysql-server mysql-client
 
 use the root password found in `/home/bob/notes/pw.gpg`
+
 link the mysql config file to that in the local user dir:
 
     sudo ln -sf /home/bob/.my.cnf /etc/mysql/my.cnf
 
-install php5 (cli and apache):
+###### install php5 (cli and apache):
 
     sudo apt-get install php5
 
@@ -482,18 +504,18 @@ if interactive mode does not work for php5-cli (this is the case for debian 7 as
     sudo ln -s /etc/phpsh/phpsh /usr/bin/phpsh # put phpsh on the $PATH
     phpsh # test it out. you should not see any errors
 
-if you see any warnings when running phpsh that there are extensions (eg PHP Warning:  PHP Startup: Unable to load dynamic library `/usr/lib/php5/20100525/http.so`) then install them like so:
+if you see any warnings when running phpsh that there are extensions (eg `PHP Warning:  PHP Startup: Unable to load dynamic library /usr/lib/php5/20100525/http.so`) then install them like so:
 
     sudo apt-get install php-http make
     sudo pecl install pecl_http
 
 after this you should not see any warnings when running phpsh
 
-install phpmyadmin (has mysql, php and apache as dependencies)
+###### install phpmyadmin (has mysql, php and apache as dependencies)
 
     sudo apt-get install phpmyadmin
 
-install freenet and start it downloading:
+###### install freenet and start it downloading
 
     cd ~/Downloads
     wget https://freenet.googlecode.com/files/new_installer_offline_1457.jar -O new_installer_offline.jar
@@ -510,8 +532,12 @@ to make freenet run when the pc boots:
 then type:
     @reboot sudo -u bob /usr/bin/freenet start 2>&1 >/tmp/freenet.cron-out
 
-install bitcoind from source. instructions for debian wheezy: http://wp.geeklab.com.ar/gl-en/2013/03/11/how-to-install-bitcoin-0-8-0-on-debian-wheezy-amd64/
-first add the line "deb-src http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu precise main" to /etc/apt/sources.list
+###### install bitcoind from source
+
+instructions for debian wheezy: http://wp.geeklab.com.ar/gl-en/2013/03/11/how-to-install-bitcoin-0-8-0-on-debian-wheezy-amd64/
+
+first add the line `deb-src http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu precise main` to `/etc/apt/sources.list`
+
 then add the key in apt:
 
     sudo gpg --keyserver hkp://subkeys.pgp.net --recv-keys D46F45428842CE5E
@@ -563,9 +589,10 @@ then type:
     @reboot sudo -u bob /usr/bin/bitcoind 2>&1 >/tmp/bitcoind.cron-out
 
 save and exit
+
 note that bitcoind probably can't run as root without the above setup
 
-install the armory client for bitcoin on debian from source:
+###### install the armory client for bitcoin on debian from source
 
     cd /usr/local/src/
 
@@ -581,11 +608,11 @@ that should finish without errors in about 5 minutes. now create a file called `
     #!/bin/sh
     python /usr/local/src/BitcoinArmory/ArmoryQt.py
 
-finally, put armory on the $PATH so that it can be run from anywhere:
+finally, put armory on the `$PATH` so that it can be run from anywhere:
 
     sudo ln -s /usr/local/src/BitcoinArmory/run.sh /usr/bin/armory
 
-download znort987's blockparser program:
+###### download znort987's blockparser program
 
     sudo apt-get install libssl-dev build-essential g++-4.4 libboost-all-dev libsparsehash-dev git-core perl
     cd /usr/local/src/
@@ -593,11 +620,13 @@ download znort987's blockparser program:
     cd blockparser
     sudo make
 
-finally, add the blockparser program to the $PATH so that it can be run from anywhere:
+finally, add the blockparser program to the `$PATH` so that it can be run from anywhere:
 
     sudo ln -s /usr/local/src/blockparser/parser /usr/bin/blockparser
 
-to install sx, first install libbitcoin (https://github.com/spesmilo/libbitcoin):
+###### install sx
+
+first install libbitcoin (https://github.com/spesmilo/libbitcoin):
 
     sudo apt-get install build-essential autoconf automake libtool libboost-all-dev pkg-config libcurl4-openssl-dev libleveldb-dev
     autoreconf -i
@@ -606,7 +635,7 @@ to install sx, first install libbitcoin (https://github.com/spesmilo/libbitcoin)
     sudo make install
     sudo ldconfig
 
-make sure email is installed and configured
+###### make sure email is installed and configured
 
     sudo apt-get install exim4
     sudo dpkg-reconfigure exim4-config
@@ -614,9 +643,9 @@ make sure email is installed and configured
 choose options:
 
 1. internet site; mail is sent and received directly using SMTP 
-2. The 'mail name' is the domain name used to 'qualify' mail addresses without a domain name = decisionator.dyndns.org
+2. The 'mail name' is the domain name used to 'qualify' mail addresses without a domain name = myhostname.com
 3. Please enter a semicolon-separated list of IP addresses. = 127.0.0.1 ; ::1
-4. Please enter a semicolon-separated list of recipient domains = decisionator.dyndns.org
+4. Please enter a semicolon-separated list of recipient domains = myhostname.com
 5. Please enter a semicolon-separated list of recipient domains for which this system will relay mail = empty
 6. Please enter a semicolon-separated list of IP address ranges for which this system will unconditionally relay mail, functioning as a smarthost = empty
 7. Keep number of DNS-queries minimal (Dial-on-Demand)? <no>
@@ -631,7 +660,7 @@ now make sure that emails get through:
 
 if you don't get an email then ensure that the dns ip is correct in `/etc/resolv.conf`
 
-install the ssh notifier (sends an email to me whenever someone logs in via ssh)
+###### install the ssh notifier (sends an email to me whenever someone logs in via ssh)
 
     sudo chown root:root ~/.ssh_notifications.php
     sudo chmod 755 ~/.ssh_notifications.php
@@ -644,20 +673,21 @@ if the time is incorrect in the email then php's date and time will need to be u
 
     date.timezone = "country/cityname"
 
-install a c compiler:
+###### install a c compiler
 
     sudo apt-get install gdb
 
-install python's package installer:
+###### install python's package installer
 
     sudo apt-get install python-pip
 
-install banshee to load music and videos onto an ipod
+###### install banshee to load music and videos onto an ipod
 
     sudo apt-get install banshee
 
-compile ffmpeg from source to convert video for ipod (http://trac.ffmpeg.org/wiki/UbuntuCompilationGuide)
-first make sure ffmpeg is completely gone
+###### compile ffmpeg from source to convert video for ipod (http://trac.ffmpeg.org/wiki/UbuntuCompilationGuide)
+
+first make sure any existing installation of ffmpeg is completely gone
 
     sudo apt-get --purge remove ffmpeg
 
@@ -743,7 +773,7 @@ now encode to mov like so:
 
     ffmpeg -i input.mp4 -c:v libx264 -preset fast -profile:v baseline out.mov
 
-install scrot to take screenshots from the command line:
+###### install scrot to take screenshots from the command line
 
     sudo apt-get install scrot
 
@@ -751,17 +781,17 @@ run it with a 2 second delay at 100% quality:
 
     scrot '%Y%m%d_1.png' -q100 -d2 -e 'mv $f /tmp/'
 
-install a vpn client compatible with cisco anyconnect
+###### install a vpn client compatible with cisco anyconnect
 
     sudo apt-get install openconnect vpnc
 
 run it, so that you can access the restricted network through your browser
 
-    echo 'the!!password' | sudo openconnect -u 'the!!username' --passwd-on-stdin vpn.adelaide.edu.au
+    echo 'the!!password' | sudo openconnect -u 'the!!username' --passwd-on-stdin vpn.hostname.com
 
 then enter the username and password when promted
 
-finally clean up any straggling packages:
+###### finally clean up any straggling packages:
 
     sudo apt-get autoremove
     sudo apt-get clean
