@@ -520,17 +520,27 @@ after this you should not see any warnings when running phpsh
 
     cd ~/Downloads
     wget https://freenet.googlecode.com/files/new_installer_offline_1457.jar -O new_installer_offline.jar
+
 now create a directory to store freenet in:
+
     sudo mkdir /usr/local/src/freenet
     sudo chown bob:bob /usr/local/src/freenet
     java -jar new_installer_offline.jar
+
 save to `/usr/local/src/freenet` and allow overwriting of this directory
+
 once the install has finished, put freenet on the $PATH so that it can be run from anywhere:
+
     sudo ln -s /usr/local/src/freenet/run.sh /usr/bin/freenet
+
 now navigate to `127.0.0.1:8888` on chromium to configure freenet
+
 to make freenet run when the pc boots:
+
     sudo crontab -e
+
 then type:
+
     @reboot sudo -u bob /usr/bin/freenet start 2>&1 >/tmp/freenet.cron-out
 
 ###### install bitcoind from source
