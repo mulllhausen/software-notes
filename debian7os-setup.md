@@ -1,12 +1,14 @@
 debian wheezy os setup
 ==============
 
-### after a fresh debian 7 install...
+#### after a fresh debian 7 install...
 
 first test if sudo is enabled for this user:
-    $ sudo echo hi
+
+    sudo echo hi
 
 if that fails then
+
     su -
     visudo
 
