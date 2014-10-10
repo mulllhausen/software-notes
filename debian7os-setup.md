@@ -30,7 +30,7 @@ check if there are any packages which have not been properly removed:
 
     dpkg -l | grep "^r"
 
-upon initial os install, package 'user-setup' will probably be found. remove it:
+upon initial os install, package `user-setup` will probably be found. remove it:
 
     sudo dpkg --purge user-setup
 
@@ -40,7 +40,8 @@ upon initial os install, package 'user-setup' will probably be found. remove it:
 
 this should give the name of the device whose firmware needs to be installed - google 'debian install <device name> firmware'
 
-####### example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):
+**example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):**
+
 first edit the `/etc/apt/sources.list` file. replace line
 
     deb http://ftp.au.debian.org/debian/ wheezy main
@@ -56,7 +57,7 @@ now update the apt library:
 
 then restart the computer and the wifi light should come on
 
-####### example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):
+**example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):**
 edit the `/etc/apt/sources.list` file. replace line
 
     deb http://ftp.au.debian.org/debian/ wheezy main contrib non-free
@@ -72,11 +73,13 @@ now update the apt library:
 
 then restart the computer and the wifi light should come on
 
-make sure the time gets automatically updated
+###### make sure the time gets automatically updated
 
     sudo apt-get install ntp
 
-get the touchpad mouse on a laptop working. first find out the brand:
+###### get the touchpad mouse on a laptop working
+
+first find out the brand:
 
     egrep -i 'synap|alps|etps' /proc/bus/input/devices
 
@@ -102,9 +105,12 @@ turn on middle click (when both left and right are clicked simultaneously):
 
     synclient EmulateMidButtonTime=100
 
-if you want these changes to be permanent then you need to edit the configuration file (/usr/share/X11/xorg.conf.d/50-synaptics.conf)
+if you want these changes to be permanent then you need to edit the configuration file (`/usr/share/X11/xorg.conf.d/50-synaptics.conf`)
+
 https://wiki.debian.org/SynapticsTouchpad
+
 https://wiki.archlinux.org/index.php/Touchpad_Synaptics
+
 update the relevant section to look like this: 
 
     Section "InputClass"
@@ -119,9 +125,11 @@ update the relevant section to look like this:
         MatchDevicePath "/dev/input/event*"
     EndSection
 
-setup fstab to mount external usb drive on boot. there is an example at `~/.fstab`
-first use gparted to find the device path (in this case it is `/dev/sdb`)
-then get the uuid:
+###### setup fstab to mount external usb drive on boot
+
+there is an example at `~/.fstab`
+
+first use gparted to find the device path (in this case it is `/dev/sdb`), then get the uuid:
 
     sudo blkid /dev/sdb1
     /dev/sdb1: UUID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" TYPE="ext4" LABEL="drivename" 
@@ -154,7 +162,7 @@ and make sure that it is owned by bob, and bob's group:
 
 again you may need to do this again after the pc has rebooted and once the drive is mounted in place
 
-install subversion for setting up repositories:
+###### install subversion for setting up repositories:
 
     sudo apt-get install subversion
 
