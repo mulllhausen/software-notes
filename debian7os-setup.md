@@ -3,7 +3,7 @@ debian wheezy os setup
 
 #### after a fresh debian 7 install...
 
-first test if sudo is enabled for this user:
+###### first test if sudo is enabled for your user (bob), and if not, then install it
 
     sudo echo hi
 
@@ -12,19 +12,21 @@ if that fails then
     su -
     visudo
 
-add line to enable sudo for user 'bob'
+add line to enable sudo for user `bob`
 
     bob    ALL=(ALL:ALL) ALL
 
-first things first, run a package update to see if any of the currently installed packages are out of date:
+###### now bring all debian packages up to date
+
+run a package-list update to bring in details any new packages that the installer cd did not know about:
 
     sudo apt-get update
 
-now upgrade any of the packages which were out of date:
+upgrade any of the packages which were out of date:
 
     sudo apt-get dist-upgrade
 
-now check if there are any packages which have not been properly removed:
+check if there are any packages which have not been properly removed:
 
     dpkg -l | grep "^r"
 
@@ -32,13 +34,13 @@ upon initial os install, package 'user-setup' will probably be found. remove it:
 
     sudo dpkg --purge user-setup
 
-if on a laptop and the wireless network card is not working:
+###### if on a laptop and the wireless network card is not working:
 
     lspci -nn | grep -i network
 
 this should give the name of the device whose firmware needs to be installed - google 'debian install <device name> firmware'
 
-###### example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):
+####### example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):
 first edit the `/etc/apt/sources.list` file. replace line
 
     deb http://ftp.au.debian.org/debian/ wheezy main
@@ -54,7 +56,7 @@ now update the apt library:
 
 then restart the computer and the wifi light should come on
 
-###### example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):
+####### example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):
 edit the `/etc/apt/sources.list` file. replace line
 
     deb http://ftp.au.debian.org/debian/ wheezy main contrib non-free
