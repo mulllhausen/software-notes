@@ -241,8 +241,7 @@ remove the nasty default iceweasel web browser and all its dependencies:
 
     sudo apt-get autoremove --purge iceweasel
 
-chromium seems a bit quicker than mozilla iceweasel and supports things like pjax which iceweasel 17.0.9 does not
-first check to see what the latest version of chromium is called:
+chromium seems a bit quicker than mozilla iceweasel and supports things like pjax which iceweasel 17.0.9 does not first check to see what the latest version of chromium is called:
 
     apt-cache search chromium
 
@@ -290,6 +289,7 @@ echo the name of the current window manager:
     wmctrl -m
 
 set up grub to boot to tty when the pc is turned on:
+
 alter `GRUB_CMDLINE_LINUX_DEFAULT` from `"quiet"` to `"text"` in `/etc/default/grub`, like so:
 
     GRUB_CMDLINE_LINUX_DEFAULT="text"
@@ -312,6 +312,7 @@ if there are no ssh keys then generate some:
     ssh-keygen -t dsa
 
 place them in `~/.ssh/`
+
 copy the public key `~/.ssh/id_das.pub` into `~/.ssh/authorized_keys` on the remote machines to login to
 
 ###### make sure the hosts file for this computer is correct
@@ -370,10 +371,6 @@ link the apache2 config file to that in the local user dir:
 
     sudo ln -sf /home/bob/.000-default /etc/apache2/sites-available/default
 
-and link any projects in `~/` to the `/var/www/` dir:
-
-    sudo ln -sf /home/bob/decisionator /var/www/decisionator
-
 make sure the server has a name:
 
     echo "ServerName myservername" > /tmp/servername
@@ -406,6 +403,7 @@ this allows you to send and receive encrypted data over http. first generate a p
     openssl genrsa -out myhostname.com.key -des3 2048
 
 enter a password. you will need this every time you restart your webserver. note that this file is never shared with anyone (not even the ssl certificate provider).
+
 now generate the certificate signing request (csr) file
 
     cd /etc/ssl/
@@ -591,6 +589,7 @@ now make sure that `~/.bitcoin/bitcoin.conf` exists and has an rpc password, the
     bitcoind getinfo
 
 if all is working then you should see a json output. if there is no output then this could be because the daemon has not yet connected to its peers, if so then just wait a while and try again.
+
 now make bitcoind run when the pc boots:
 
     sudo crontab -e
@@ -665,6 +664,7 @@ choose options:
 10. Root and postmaster mail recipient = empty
 
 exim should then restart
+
 now make sure that emails get through:
 
     echo "sending to gmail at mm:ss" | mail -s "mm:ss" bob@gmail.com
