@@ -336,6 +336,11 @@ first setup debian multiarch so that it can run a 32 bit program on a 64 bit cpu
     sudo dpkg --add-architecture i386
     sudo apt-get update
 
+make sure skype is not already installed:
+
+    sudo apt-get remove --purge skype skype-bin skype:i386 skype-bin:i386
+	rm -rf ~/.Skype
+
 then, download the i386 package into the /tmp/ dir and install:
 
     cd /tmp
