@@ -356,6 +356,8 @@ then, download the i386 package into the /tmp/ dir and install:
 
 restart to get skype to recognize pulseaudio and all should be fine
 
+    sudo shutdown -r 0
+
 ###### install vuze to get some torrent files
 
     sudo apt-get install vuze
