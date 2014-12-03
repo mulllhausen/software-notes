@@ -336,10 +336,16 @@ first setup debian multiarch so that it can run a 32 bit program on a 64 bit cpu
     sudo dpkg --add-architecture i386
     sudo apt-get update
 
-make sure skype is not already installed:
+remove any previous installations of skype:
 
     sudo apt-get remove --purge skype skype-bin skype:i386 skype-bin:i386
 	rm -rf ~/.Skype
+
+install dependencies:
+
+    sudo apt-get install pavucontrol
+
+run pavucontrol and make sure the desired microphone is set as "fallback" - this actually means "default"!!!
 
 then, download the i386 package into the /tmp/ dir and install:
 
@@ -347,6 +353,8 @@ then, download the i386 package into the /tmp/ dir and install:
     wget -O skype-install.deb http://www.skype.com/go/getskype-linux-deb
     sudo dpkg -i skype-install.deb
     sudo apt-get -f install
+
+restart to get skype to recognize pulseaudio and all should be fine
 
 ###### install vuze to get some torrent files
 
