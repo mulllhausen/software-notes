@@ -817,6 +817,37 @@ run it, so that you can access the restricted network through your browser
 
 then enter the username and password when promted
 
+###### install a vpn client compatible with microsoft point-to-point vpn
+
+    sudo apt-get install pptp-linux
+
+now configure it to connect to your resired private network (called vpn0 here)
+
+    sudo ln -sf /home/bob/.ppp_vpn0_pw /etc/ppp/chap-secrets
+    sudo ln -sf /home/bob/.ppp_vpn0_settings /etc/ppp/peers/vpn0
+
+make sure that the .ppp* files have the following properties:
+
+    -rw------- 1 bob bob <size> <datetime> /home/bob/.ppp_ttlan_pw
+    -rw-r--r-- 1 bob bob <size> <datetime> /home/bob/.ppp_ttlan_settings
+
+now you can start and stop ppp vpn any time like so:
+
+    sudo pon vpn0
+    sudo poff vpn0
+
+to check if the vpn interface is working:
+
+    ifconfig | grep ppp
+
+and you should see an entry (might need to wait a half a minute after starting the vpn if the connection is very slow).
+
+to diagnose errors:
+
+    pon vpn0 debug dump logfd 2 nodetach
+
+extra help here: http://pptpclient.sourceforge.net/howto-debian.phtml
+
 ###### finally clean up any straggling packages:
 
     sudo apt-get autoremove
