@@ -828,8 +828,8 @@ now configure it to connect to your resired private network (called vpn0 here)
 
 make sure that the .ppp* files have the following properties:
 
-    -rw------- 1 bob bob <size> <datetime> /home/bob/.ppp_ttlan_pw
-    -rw-r--r-- 1 bob bob <size> <datetime> /home/bob/.ppp_ttlan_settings
+    -rw------- 1 bob bob <size> <datetime> /home/bob/.ppp_vpn0_pw
+    -rw-r--r-- 1 bob bob <size> <datetime> /home/bob/.ppp_vpn0_settings
 
 now you can start and stop ppp vpn any time like so:
 
