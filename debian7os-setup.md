@@ -16,6 +16,14 @@ add line to enable sudo for user `bob`
 
     bob    ALL=(ALL:ALL) ALL
 
+###### very important for system recovery down the track
+
+check to see what drives are mounted on your install:
+
+    df -h
+
+and copy 3 files of approx 500mb each into the root filesystem. this provides a buffer if your drive fills up later on - you can delete one of the files which may give you time to fix the problem.
+
 ###### now bring all debian packages up to date
 
 run a package-list update to bring in details any new packages that the installer cd did not know about:
