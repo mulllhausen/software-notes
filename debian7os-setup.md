@@ -1,9 +1,9 @@
 debian wheezy os setup
 ==============
 
-#### after a fresh debian 7 install...
+###### after a fresh debian 7 install...
 
-###### first test if sudo is enabled for your user (bob), and if not, then install it
+#### first test if sudo is enabled for your user (bob), and if not, then install it
 
     sudo echo hi
 
@@ -16,7 +16,7 @@ add line to enable sudo for user `bob`
 
     bob    ALL=(ALL:ALL) ALL
 
-###### very important for system recovery down the track
+#### very important for system recovery down the track
 
 check to see what drives are mounted on your install:
 
@@ -24,7 +24,7 @@ check to see what drives are mounted on your install:
 
 and copy 3 files of approx 500mb each into the root filesystem. this provides a buffer if your drive fills up later on - you can delete one of the files which may give you time to fix the problem.
 
-###### now bring all debian packages up to date
+#### now bring all debian packages up to date
 
 run a package-list update to bring in details any new packages that the installer cd did not know about:
 
@@ -42,13 +42,13 @@ upon initial os install, package `user-setup` will probably be found. remove it:
 
     sudo dpkg --purge user-setup
 
-###### if on a laptop and the wireless network card is not working:
+#### if on a laptop and the wireless network card is not working:
 
     lspci -nn | grep -i network
 
 this should give the name of the device whose firmware needs to be installed - google 'debian install <device name> firmware'
 
-**example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):**
+###### example for the broadcomm bcm4311 wireless network device (https://wiki.debian.org/bcm43xx):
 
 first edit the `/etc/apt/sources.list` file. replace line
 
@@ -65,7 +65,7 @@ now update the apt library:
 
 then restart the computer and the wifi light should come on
 
-**example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):**
+###### example for the ralink rt3290 wireless network device (https://wiki.debian.org/rt3290):
 
 edit the `/etc/apt/sources.list` file. replace line
 
@@ -82,11 +82,11 @@ now update the apt library:
 
 then restart the computer and the wifi light should come on
 
-###### make sure the time gets automatically updated
+#### make sure the time gets automatically updated
 
     sudo apt-get install ntp
 
-###### get the touchpad mouse on a laptop working
+#### get the touchpad mouse on a laptop working
 
 first find out the brand:
 
@@ -134,7 +134,7 @@ update the relevant section to look like this:
         MatchDevicePath "/dev/input/event*"
     EndSection
 
-###### setup fstab to mount external usb drive on boot
+#### setup fstab to mount external usb drive on boot
 
 there is an example at `~/.fstab`
 
@@ -171,7 +171,7 @@ and make sure that it is owned by bob, and bob's group:
 
 again you may need to do this again after the pc has rebooted and once the drive is mounted in place
 
-###### install subversion for setting up repositories:
+#### install subversion for setting up repositories:
 
     sudo apt-get install subversion
 
@@ -183,11 +183,11 @@ if the file does not exist then:
 
     svn checkout svn+ssh://bob@pcname/home/bob/repositories/config /home/bob
 
-###### update the dns ip address
+#### update the dns ip address
 
     sudo ln -sf ~/.resolv.conf /etc/resolv.conf
 
-###### install and configure the full version of vim:
+#### install and configure the full version of vim:
 
     sudo apt-get install vim
 
@@ -195,11 +195,11 @@ link the .vimrc file to the /root/ directory so that sudo vi has colors too:
 
     sudo ln -sf /home/bob/.vimrc /root/.vimrc
 
-###### stop the cursor from blinking (if using the gui gnome terminal)
+#### stop the cursor from blinking (if using the gui gnome terminal)
 
     gconftool-2 --set /apps/gnome-terminal/profiles/Default/cursor_blink_mode --type string off
 
-###### setup the tty font size to avoid eye strain:
+#### setup the tty font size to avoid eye strain:
 
     sudo dpkg-reconfigure console-setup
 
@@ -227,7 +227,7 @@ install the terminus font for use in xterm:
 
     sudo apt-get install xfonts-terminus
 
-###### test the column width in xterm. if it is too small then set it to some big number:
+#### test the column width in xterm. if it is too small then set it to some big number:
 
     stty cols 1800
 
@@ -243,7 +243,7 @@ then link the global crontab to the local crontab:
 
     sudo ln -sf /home/bob/.crontab /etc/crontab
 
-###### install a browser to surf the net and look for answers when stuck (and cat pictures)
+#### install a browser to surf the net and look for answers when stuck (and cat pictures)
 
 remove the nasty default iceweasel web browser and all its dependencies:
 
@@ -262,7 +262,7 @@ install both of these:
 
     sudo apt-get install chromium-browser chromium-browser-l10n
 
-###### install flash so that you can watch videos
+#### install flash so that you can watch videos
 
 first update /etc/apt/sources.list. replace line:
 
@@ -280,11 +280,11 @@ then install flash:
 
     sudo apt-get install flashplugin-nonfree 
 
-###### install xorg so that startx works
+#### install xorg so that startx works
 
     sudo apt-get install xinit
 
-###### also install the mutter window manager:
+#### also install the mutter window manager:
 
     sudo apt-get install mutter
 
@@ -310,7 +310,7 @@ make sure that the screen configuration file exists
 
     vi ~/.screenrc
 
-###### make sure ssh is installed and linked to the correct sshd_config:
+#### make sure ssh is installed and linked to the correct sshd_config:
 
     sudo apt-get install ssh
     sudo ln -s /home/bob/.ssh/sshd_config /etc/ssh/sshd_config
@@ -323,21 +323,21 @@ place them in `~/.ssh/`
 
 copy the public key `~/.ssh/id_das.pub` into `~/.ssh/authorized_keys` on the remote machines to login to
 
-###### make sure the hosts file for this computer is correct
+#### make sure the hosts file for this computer is correct
 
 note that `/etc/hosts` cannot be removed first if you want to use sudo:
 
     sudo ln -sf /home/bob/.hosts_pcname /etc/hosts
 
-###### set up the network interfaces file to point at the dot file on the hard drive 
+#### set up the network interfaces file to point at the dot file on the hard drive 
 
     sudo ln -sf /home/bob/.interfaces_pcname /etc/network/interfaces
 
-###### install the full version of vlc to watch movies:
+#### install the full version of vlc to watch movies:
 
     sudo apt-get install vlc
 
-###### install skype
+#### install skype
 
 first setup debian multiarch so that it can run a 32 bit program on a 64 bit cpu:
 
@@ -366,15 +366,15 @@ restart to get skype to recognize pulseaudio and all should be fine
 
     sudo shutdown -r 0
 
-###### install vuze to get some torrent files
+#### install vuze to get some torrent files
 
     sudo apt-get install vuze
 
-###### install zip so that you can zip/unzip saved files
+#### install zip so that you can zip/unzip saved files
 
     sudo apt-get install zip
 
-###### install apache2
+#### install apache2
 
     sudo apt-get install apache2
 
@@ -418,7 +418,7 @@ now add your own user to the www-data group
 
 log out and log back in to be able to make changes
 
-###### set up an ssl certificate for your website
+#### set up an ssl certificate for your website
 
 this allows you to send and receive encrypted data over http. first generate a private rsa (key) file
 
@@ -496,7 +496,7 @@ once you find this entry then comment it out with a #. then restart apache2 agai
 
 to check that the certificate is recognized open your browser and navigate to `https://myhostname.com`. right click on the padlock and make sure the date of the certificate begins on the current date.
 
-###### install mysql
+#### install mysql
 
     sudo apt-get install mysql-server mysql-client
 
@@ -506,7 +506,7 @@ link the mysql config file to that in the local user dir:
 
     sudo ln -sf /home/bob/.my.cnf /etc/mysql/my.cnf
 
-###### install php5 (cli and apache):
+#### install php5 (cli and apache):
 
     sudo apt-get install php5
 
@@ -533,11 +533,11 @@ if you see any warnings when running phpsh that there are extensions (eg `PHP Wa
 
 after this you should not see any warnings when running phpsh
 
-###### install phpmyadmin (has mysql, php and apache as dependencies)
+#### install phpmyadmin (has mysql, php and apache as dependencies)
 
     sudo apt-get install phpmyadmin
 
-###### install freenet and start it downloading
+#### install freenet and start it downloading
 
     cd ~/Downloads
     wget https://freenet.googlecode.com/files/new_installer_offline_1457.jar -O new_installer_offline.jar
@@ -564,7 +564,7 @@ then type:
 
     @reboot sudo -u bob /usr/bin/freenet start 2>&1 >/tmp/freenet.cron-out
 
-###### install bitcoind from source
+#### install bitcoind from source
 
 instructions for debian wheezy: http://wp.geeklab.com.ar/gl-en/2013/03/11/how-to-install-bitcoin-0-8-0-on-debian-wheezy-amd64/
 
@@ -625,7 +625,7 @@ save and exit
 
 note that bitcoind probably can't run as root without the above setup
 
-###### install the armory client for bitcoin on debian from source
+#### install the armory client for bitcoin on debian from source
 
     cd /usr/local/src/
 
@@ -645,7 +645,7 @@ finally, put armory on the `$PATH` so that it can be run from anywhere:
 
     sudo ln -s /usr/local/src/BitcoinArmory/run.sh /usr/bin/armory
 
-###### download znort987's blockparser program
+#### download znort987's blockparser program
 
     sudo apt-get install libssl-dev build-essential g++-4.4 libboost-all-dev libsparsehash-dev git-core perl
     cd /usr/local/src/
@@ -657,7 +657,7 @@ finally, add the blockparser program to the `$PATH` so that it can be run from a
 
     sudo ln -s /usr/local/src/blockparser/parser /usr/bin/blockparser
 
-###### install sx
+#### install sx
 
 first install libbitcoin (https://github.com/spesmilo/libbitcoin):
 
@@ -668,7 +668,7 @@ first install libbitcoin (https://github.com/spesmilo/libbitcoin):
     sudo make install
     sudo ldconfig
 
-###### make sure email is installed and configured
+#### make sure email is installed and configured
 
     sudo apt-get install exim4
     sudo dpkg-reconfigure exim4-config
@@ -694,7 +694,7 @@ now make sure that emails get through:
 
 if you don't get an email then ensure that the dns ip is correct in `/etc/resolv.conf`
 
-###### install the ssh notifier (sends an email to me whenever someone logs in via ssh)
+#### install the ssh notifier (sends an email to me whenever someone logs in via ssh)
 
     sudo chown root:root ~/.ssh_notifications.php
     sudo chmod 755 ~/.ssh_notifications.php
@@ -707,19 +707,19 @@ if the time is incorrect in the email then php's date and time will need to be u
 
     date.timezone = "country/cityname"
 
-###### install a c compiler
+#### install a c compiler
 
     sudo apt-get install gdb
 
-###### install python's package installer
+#### install python's package installer
 
     sudo apt-get install python-pip
 
-###### install banshee to load music and videos onto an ipod
+#### install banshee to load music and videos onto an ipod
 
     sudo apt-get install banshee
 
-###### compile ffmpeg from source to convert video for ipod (http://trac.ffmpeg.org/wiki/UbuntuCompilationGuide)
+#### compile ffmpeg from source to convert video for ipod (http://trac.ffmpeg.org/wiki/UbuntuCompilationGuide)
 
 first make sure any existing installation of ffmpeg is completely gone
 
@@ -807,7 +807,7 @@ now encode to mov like so:
 
     ffmpeg -i input.mp4 -c:v libx264 -preset fast -profile:v baseline out.mov
 
-###### install scrot to take screenshots from the command line
+#### install scrot to take screenshots from the command line
 
     sudo apt-get install scrot
 
@@ -815,7 +815,7 @@ run it with a 2 second delay at 100% quality:
 
     scrot '%Y%m%d_1.png' -q100 -d2 -e 'mv $f /tmp/'
 
-###### install a vpn client compatible with cisco anyconnect
+#### install a vpn client compatible with cisco anyconnect
 
     sudo apt-get install openconnect vpnc
 
@@ -825,7 +825,7 @@ run it, so that you can access the restricted network through your browser
 
 then enter the username and password when promted
 
-###### install a vpn client compatible with microsoft point-to-point vpn
+#### install a vpn client compatible with microsoft point-to-point vpn
 
     sudo apt-get install pptp-linux
 
@@ -856,7 +856,7 @@ to diagnose errors:
 
 extra help here: http://pptpclient.sourceforge.net/howto-debian.phtml
 
-###### finally clean up any straggling packages:
+#### finally clean up any straggling packages:
 
     sudo apt-get autoremove
     sudo apt-get clean
