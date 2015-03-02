@@ -42,11 +42,10 @@ open file `/etc/default/smartmontools` and uncomment the following line:
     #start_smartd=yes
 
 then open the `/etc/smartd.conf` file. include a line like so for each disk:
-https://help.ubuntu.com/community/Smartmontools
 
     /dev/sda -S on -o on -a -s (O/../.././23|L/../../5/03) -m root
 
-this command contains the following settings:
+this command [contains the following settings](https://help.ubuntu.com/community/Smartmontools):
 
  - `-S on` - enable automatic attribute save
  - `-o on` - enable automatic offline testing
@@ -58,7 +57,7 @@ this command contains the following settings:
 
 #### grow the raid1 to a raid6 (now using 4 disks)
 
-raid6 can handle 2 disks dying simultaneously, but raid5 can only handle 1 (cautionary tale: http://serverfault.com/q/614523/132992)
+raid6 can handle 2 disks dying simultaneously, but raid5 can only handle 1. see [here](http://serverfault.com/q/614523/132992) for a cautionary tale on not using raid 5.
 
 #### raid email notification setup
 
