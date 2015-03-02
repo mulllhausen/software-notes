@@ -3,11 +3,29 @@ debian wheezy os setup
 
 ###### after a fresh debian 7 install...
 
-#### first test if sudo is enabled for your user (bob), and if not, then install it
+#### first test if sudo is installed and enabled for your user (bob):
 
     sudo echo hi
 
-if that fails then
+if you see
+
+    -bash: sudo: command not found
+
+then login as root and install `sudo` like so:
+
+    su
+    apt-get install sudo
+    exit
+
+then try again:
+
+    sudo echo hi
+
+if that fails, like so:
+
+    bob is not in the sudoers file. This incident will be reported.
+
+then add your user to the sudoers file:
 
     su -
     visudo
