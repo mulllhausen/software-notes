@@ -11,7 +11,7 @@ if you see
 
     -bash: sudo: command not found
 
-then login as root and install `sudo` like so:
+then `sudo` is not installed. login as root and install it like so:
 
     su
     apt-get install sudo
@@ -21,11 +21,11 @@ then try again:
 
     sudo echo hi
 
-if that fails, like so:
+if you see the following message, then sudo is not enabled for your user:
 
     bob is not in the sudoers file. This incident will be reported.
 
-then add your user to the sudoers file:
+so add your user to the sudoers file:
 
     su -
     visudo
