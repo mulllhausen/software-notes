@@ -68,6 +68,7 @@ if &term == "linux" " disable cursor blinking in linux terminal (tty)
 endif
 
 " map control-a to mu
+set encoding=utf-8
 imap <C-a> <C-k>m*
 
 " when in diff mode expand all lines out
