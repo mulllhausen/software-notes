@@ -1,5 +1,5 @@
 # add this to ~/.bashrc like so:
-# . .pretty_bash_prompt 2> /dev/null
+# . ~/.pretty_bash_prompt 2> /dev/null
 
 ##############
 # pretty prompt and font colors
