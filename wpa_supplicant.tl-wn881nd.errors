@@ -31,7 +31,7 @@ rfkill: initial event: idx=0 type=1 op=0 soft=0 hard=0
 SIOCGIWRANGE: WE(compiled)=22 WE(source)=21 enc_capa=0xf
   capabilities: key_mgmt 0xf enc 0xf flags 0x0
 netlink: Operstate: linkmode=1, operstate=5
-wlan0: Own MAC address: 14:cc:20:ea:56:78
+wlan0: Own MAC address: xx:xx:xx:xx:xx:xx
 wpa_driver_wext_set_key: alg=0 key_idx=0 set_tx=0 seq_len=0 key_len=0
 wpa_driver_wext_set_key: alg=0 key_idx=1 set_tx=0 seq_len=0 key_len=0
 wpa_driver_wext_set_key: alg=0 key_idx=2 set_tx=0 seq_len=0 key_len=0
