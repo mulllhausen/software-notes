@@ -214,8 +214,43 @@ but if it says
 
     connect: Network is unreachable
 
-then you don't have a connection to the router. if this happens then the first thing to do is to check the light is on for the wifi card. if it is then have a look through this for help - http://unix.stackexchange.com/questions/190754/wpa-supplicant-nightmares
+then you don't have a connection to the router. if this happens then the first thing to do is to check the light is on for the wifi card. if it is on then have a look through this for help - http://unix.stackexchange.com/questions/190754/wpa-supplicant-nightmares
 
 #### connect to an ssid using `wpa_supplicant` via `/etc/network/interfaces`
 
+on debian 7 it is possible to have wpa_supplicant called automatically by placing the relevant instructions in `/etc/network/interfaces` like so:
 
+    iface wlan0 inet static
+        wpa-ssid "myssid"
+        wpa-psk "my wpa2 password"
+        wpa-ap-scan 1
+        wpa-proto WPA2
+        wpa-pairwise CCMP
+        wpa-group CCMP
+        wpa-key-mgmt WPA-PSK
+        address 192.168.1.50
+        netmask 255.255.255.0
+        gateway 192.168.1.1
+        dns-nameservers 8.8.8.8 8.8.4.4
+
+rename `/etc/wpa_supplicant/wpa_supplicant.conf` so that it no longer gets called:
+
+    $ sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.old
+
+now bring up the device:
+
+    $ sudo ip link set wlan0 up
+
+and bringing up the interface should automatically connect to your wifi access point without the need to manually run wpa_supplicant:
+
+    $ sudo ifup wlan0
+
+if you can ping the router then you have done everything correctly:
+
+    ping 192.168.1.1
+
+but if it says
+
+    connect: Network is unreachable
+
+then you don't have a connection to the router. if this happens then the first thing to do is to check the light is on for the wifi card. if it is on then have a look through this for help - http://unix.stackexchange.com/questions/190754/wpa-supplicant-nightmares
