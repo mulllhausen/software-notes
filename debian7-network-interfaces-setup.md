@@ -216,6 +216,8 @@ but if it says
 
 then you don't have a connection to the router. if this happens then the first thing to do is to check the light is on for the wifi card. if it is on then have a look through this for help - http://unix.stackexchange.com/questions/190754/wpa-supplicant-nightmares
 
+once everything is working fine then you can uncomment `auto wlan0` in `/etc/network/interfaces` if you want the wifi to come on at boot
+
 #### connect to an ssid using `wpa_supplicant` via `/etc/network/interfaces`
 
 on debian 7 it is possible to have wpa_supplicant called automatically by placing the relevant instructions in `/etc/network/interfaces` like so:
@@ -254,3 +256,5 @@ but if it says
     connect: Network is unreachable
 
 then you don't have a connection to the router. if this happens then the first thing to do is to check the light is on for the wifi card. if it is on then have a look through this for help - http://unix.stackexchange.com/questions/190754/wpa-supplicant-nightmares
+
+once everything is working fine then you can uncomment `auto wlan0` in `/etc/network/interfaces` if you want the wifi to come on at boot
