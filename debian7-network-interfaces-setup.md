@@ -5,7 +5,7 @@ these instructions only apply to setting up network interfaces via the commandli
 
 #### check to see what interface hardware is available
 
-    $ ifconfig -a
+    $ ip link
 
 for the remainder of these notes, the following output is assumed:
 
