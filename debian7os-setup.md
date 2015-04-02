@@ -874,6 +874,42 @@ to diagnose errors:
 
 extra help here: http://pptpclient.sourceforge.net/howto-debian.phtml
 
+#### install an rdp client so you can connect to windows machines
+
+    sudo apt-get install remmina
+
+run it from the commandline and put in the details of an rdp server (eg a windows 8 pc). attempt to connect and see if there are any certificate errors:
+
+    $ remmina
+    connected to 192.168.0.x:3389
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @           WARNING: CERTIFICATE NAME MISMATCH!           @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    The hostname used for this connection (192.168.0.x) 
+    does not match the name given in the certificate:
+    remote-pc-name
+    A valid certificate for the wrong name should NOT be trusted!
+
+if you see this warning then use whatever value you see reported instead of remote-pc-name in the server textbox in remmina, then edit your /etc/hosts so that remmina can find the ip address of this server. make sure a line like so exists:
+
+192.168.0.x remote-pc-name
+
+###### to copy a file between your local debian 7 pc and the remote windows machine
+
+first make sure that no rdp session is open for the profile you are editing, then edit the remote desktop preferences in remmina like so:
+
+**basic tab**
+
+- share folder - set to something like /tmp
+
+**advanced tab**
+
+- sound: local
+- security: rdp
+- make sure to click save.
+
+after this, navigate to `my computer` on the remote windows desktop and click refresh. the shared folder should appear under `other devices` and drives right next to local disk `c:`
+
 #### finally clean up any straggling packages:
 
     sudo apt-get autoremove
