@@ -49,7 +49,7 @@ the route to `xyz.lnk.te` (ip address `111.123.51.62`) is a host link (`H` flag)
 
 the [`link-local` route](http://en.wikipedia.org/wiki/Link-local_address) is a rule which applies to all addresses in the range `169.254.1.0` to `169.254.254.255`. basically anything in this range is not allowed out of the lan.
 
-the first `ppp0` route in the table above specifies that any request to an ip address in the range `192.168.0.0` to `192.168.0.255` will be forwarded to `192.168.0.104`. the netmask `255.255.255.0` specifies that the first 3 chunks of the ip address must be exactly as specified (`192.168.0`) and the final chunk can be anything (`0` to `255`).
+the first `ppp0` route in the table above specifies that any request to an ip address in the range `192.168.0.0` to `192.168.0.255` will be forwarded to `192.168.0.104`. the netmask `255.255.255.0` specifies that the first 3 bytes of the ip address must be exactly as specified (`192.168.0`) and the final byte can be anything (`0` to `255`).
 
 #### to delete a route
 
