@@ -892,15 +892,19 @@ run it from the commandline and put in the details of an rdp server (eg a window
 
 if you see this warning then use whatever value you see reported instead of remote-pc-name in the server textbox in remmina, then edit your /etc/hosts so that remmina can find the ip address of this server. make sure a line like so exists:
 
-192.168.0.x remote-pc-name
+    192.168.0.x remote-pc-name
 
 ###### to copy a file between your local debian 7 pc and the remote windows machine
 
-first make sure that no rdp session is open for the profile you are editing, then edit the remote desktop preferences in remmina like so:
+first create a new dir to share with the remote machine. it is best not to use an existing dir for this otherwise the remote machine will be very slow to load the file list, and also anything in that dir which you may not have wanted to share will be automatically shared.
+
+    mkdir ~/remmina_share0
+
+now make sure that no rdp session is open for the profile you are editing, then edit the remote desktop preferences in remmina like so:
 
 **basic tab**
 
-- share folder - set to something like /tmp
+- share folder - set to the new `~/remmina_share0` dir
 
 **advanced tab**
 
