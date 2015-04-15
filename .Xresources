@@ -1,0 +1,110 @@
+! see man xterm under the resources heading for explanations
+! run `xrdb -merge ~/.Xresources` after altering this file
+! run `xrdb -query -all` to see the current settings
+
+!###############################
+!# begin xterm specific settings
+!###############################
+xterm.vt100.faceName: Terminus
+xterm.vt100.faceSize: 14
+! do not display bold fonts in bold
+xterm.vt100.AllowBoldFonts: false
+! display bold fonts in a different color to make them stand out
+xterm.vt100.colorBDMode: true
+! use green as the bold color (same as in ~/.bashrc)
+xterm.vt100.colorBD: #98E34D
+
+! cols x lines ... update with values from $(echo $COLUMNS) and $(echo $LINES)
+xterm.vt100.geometry: 126x52
+
+! scroll quickly
+xterm*fastScroll: true
+
+! enable utf-8 encoding - doesnt actually work!
+xterm*locale: true
+xterm*utf8: 1
+
+!###############################
+!# end xterm specific settings
+!###############################
+
+!###############################
+!# begin urxvt specific settings
+!###############################
+
+! set the font (dont use a bold font)
+URxvt*font: -xos4-terminus-medium-*-*-*-14-*-*-*-*-*-iso8859-15,xft:terminus:pixelsize:14
+URxvt*boldFont: -xos4-terminus-bold-*-*-*-14-*-*-*-*-*-iso8859-15,xft:terminus:bold:pixelsize:14
+URxvt*italicFont: xft:Bitstream Vera Sans Mono:italic:autohint=true:pixelsize=14
+URxvt*boldItalicFont: xft:Bitstream Vera Sans Mono:bold:italic:autohint=true:pixelsize=14
+
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+
+! URxvt*font: xft:Monospace:pixelsize=11
+! URxvt*boldFont: xft:Monospace:pixelsize=11
+
+! spacing between font letters
+URxvt.letterSpace: 0
+! URxvt.geometry: 40x84
+
+! disable the scrollbar - my mouse has a wheel lol
+URxvt.scrollBar: false
+
+! enable fullscreen
+URxvt.perl-ext-common: fullscreen
+URxvt.keysym.F11: perl:fullscreen:switch
+
+! toggle font size on the fly
+URxvt.keysym.C-Up:     perl:font-size:increase
+URxvt.keysym.C-Down:   perl:font-size:decrease
+URxvt.keysym.C-S-Up:   perl:font-size:incglobal
+URxvt.keysym.C-S-Down: perl:font-size:decglobal
+
+
+
+!###############################
+!# end urxvt specific settings
+!###############################
+
+! dark green foreground (same as in ~/.bashrc)
+*foreground: #4E9A06
+! black background
+*background: #000000
+
+! flash the current line instead of making the bell sound
+*visualBell: true
+*visualBellLine: true
+
+! black
+*color0: #2E3436
+! darkred
+*color1: #CC0000
+! dark green
+*color2: #4E9A06
+! brown
+*color3: #C4A000
+! darkblue
+*color4: #3465A4
+! darkmagenta
+*color5: #75507B
+! darkcyan
+*color6: #06989A
+! lightgrey
+*color7: #D3D7CF
+! darkgrey
+*color8: #555753
+! red
+*color9: #EF2929
+! green
+*colorA: #8AE234
+! yellow
+*colorB: #FCE94F
+! blue
+*colorC: #729FCF
+! magenta
+*colorD: #AD7FA8
+! cyan
+*colorE: #34E2E2
+! white
+*colorF: #EEEEEC
