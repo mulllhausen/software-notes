@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# this file is run when startx is called. put startx in ~/.bashrc
-
 #update the xterm colors, font size, etc
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
@@ -17,8 +15,8 @@ sleep 2
 
 # run the xterm in fullscreen
 #xterm +u8 -js -fullscreen &
-xterm -en en_AU.UTF-8 -js -fullscreen &
-#urxvt &
+#xterm -en en_AU.UTF-8 -js -fullscreen &
+urxvt &
 
 # do not let the window manager become a zombie
 wait $wm_pid

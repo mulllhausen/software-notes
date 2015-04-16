@@ -2,75 +2,67 @@
 ! run `xrdb -merge ~/.Xresources` after altering this file
 ! run `xrdb -query -all` to see the current settings
 
-!###############################
-!# begin xterm specific settings
-!###############################
-xterm.vt100.faceName: Terminus
-xterm.vt100.faceSize: 14
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! begin xterm specific settings
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! terminus is a really nice font but it cannot display unicode with xterm :(
+! xterm*faceName: Terminus-14
+xterm.vt100.faceName: Monospace-12:style=Regular:antialias=true
+
 ! do not display bold fonts in bold
-xterm.vt100.AllowBoldFonts: false
-! display bold fonts in a different color to make them stand out
-xterm.vt100.colorBDMode: true
-! use green as the bold color (same as in ~/.bashrc)
-xterm.vt100.colorBD: #98E34D
+xterm*AllowBoldFonts: false
 
 ! cols x lines ... update with values from $(echo $COLUMNS) and $(echo $LINES)
-xterm.vt100.geometry: 126x52
-
-! scroll quickly
-xterm*fastScroll: true
+! xterm*geometry: 126x52
 
 ! enable utf-8 encoding - doesnt actually work!
 xterm*locale: true
-xterm*utf8: 1
+xterm*utf8: 2
 
-!###############################
-!# end xterm specific settings
-!###############################
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! end xterm specific settings
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!###############################
-!# begin urxvt specific settings
-!###############################
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! begin urxvt specific settings
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-! set the font (dont use a bold font)
-URxvt*font: -xos4-terminus-medium-*-*-*-14-*-*-*-*-*-iso8859-15,xft:terminus:pixelsize:14
-URxvt*boldFont: -xos4-terminus-bold-*-*-*-14-*-*-*-*-*-iso8859-15,xft:terminus:bold:pixelsize:14
-URxvt*italicFont: xft:Bitstream Vera Sans Mono:italic:autohint=true:pixelsize=14
-URxvt*boldItalicFont: xft:Bitstream Vera Sans Mono:bold:italic:autohint=true:pixelsize=14
+! URxvt*font: xft:Monospace-12:antialias=true
+! URxvt*boldFont: xft:Monospace-12:antialias=true
+URxvt*font: xft:Terminus-16:antialias=true
+URxvt*boldFont: xft:Terminus-16:antialias=true
 
+! disable ctrl+shift mapping
 URxvt.iso14755: false
 URxvt.iso14755_52: false
 
-! URxvt*font: xft:Monospace:pixelsize=11
-! URxvt*boldFont: xft:Monospace:pixelsize=11
-
 ! spacing between font letters
 URxvt.letterSpace: 0
-! URxvt.geometry: 40x84
 
 ! disable the scrollbar - my mouse has a wheel lol
 URxvt.scrollBar: false
 
-! enable fullscreen
+! map F11 to fullscreen
 URxvt.perl-ext-common: fullscreen
 URxvt.keysym.F11: perl:fullscreen:switch
 
-! toggle font size on the fly
-URxvt.keysym.C-Up:     perl:font-size:increase
-URxvt.keysym.C-Down:   perl:font-size:decrease
-URxvt.keysym.C-S-Up:   perl:font-size:incglobal
-URxvt.keysym.C-S-Down: perl:font-size:decglobal
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! end urxvt specific settings
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-!###############################
-!# end urxvt specific settings
-!###############################
+! scroll quickly
+*fastScroll: true
 
 ! dark green foreground (same as in ~/.bashrc)
 *foreground: #4E9A06
 ! black background
 *background: #000000
+
+! display bold fonts in a different color to make them stand out
+*colorBDMode: true
+! use green as the bold color (same as in ~/.bashrc)
+*colorBD: #98E34D
 
 ! flash the current line instead of making the bell sound
 *visualBell: true
