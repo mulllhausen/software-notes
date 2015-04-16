@@ -5,8 +5,8 @@
 # open a new xterm with the following options
 $ xterm -u8 -fa "DejaVu Sans Mono"
 $ lsof -p $PPID | grep fonts
-xterm   5990 peter  mem    REG              254,1     4971 13501810 /usr/share/fonts/X11/misc/ter-u18b_iso-8859-1.pcf.gz
-xterm   5990 peter  mem    REG              254,1     4897 13505403 /usr/share/fonts/X11/misc/ter-u18n_iso-8859-1.pcf.gz
+xterm   5990 me  mem    REG              254,1     4971 13501810 /usr/share/fonts/X11/misc/ter-u18b_iso-8859-1.pcf.gz
+xterm   5990 me  mem    REG              254,1     4897 13505403 /usr/share/fonts/X11/misc/ter-u18n_iso-8859-1.pcf.gz
 
 $ fc-list
 /usr/share/fonts/truetype/droid/DroidNaskh-Bold.ttf: Droid Sans:style=Bold
