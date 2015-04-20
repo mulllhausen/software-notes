@@ -1,0 +1,6 @@
+# some commands to augment /etc/inputrc for this user's profile only
+# set bell-style none
+set bell-style visible
+set input-meta on
+set output-meta on
+set convert-meta off
