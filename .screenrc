@@ -1,0 +1,14 @@
+# don't display the copyright page
+startup_message off
+
+# keep scrollback n lines
+defscrollback 50000
+
+# enable 256 colors for various terminals
+attrcolor b ".I"
+termcapinfo rxvt-unicode 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce "on"
+
+# always show the caption bar at the bottom of the terminal for extra info
+caption always

@@ -67,6 +67,9 @@ if &term == "linux" " disable cursor blinking in linux terminal (tty)
   set t_ve+=[?16;13;32c " see ~./pretty_bash_prompt for a translation of these numbers
 endif
 
+" use 256 colors
+set t_Co=256
+
 " map control-a to mu
 set encoding=utf-8
 imap <C-a> <C-k>m*
