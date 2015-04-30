@@ -8,7 +8,7 @@
 
 ! terminus is a really nice font but it cannot display unicode with xterm :(
 ! xterm*faceName: Terminus-14
-xterm.vt100.faceName: Monospace-12:style=Regular:antialias=true
+xterm.vt100.faceName: Monospace-16:style=Regular:antialias=true
 
 ! do not display bold fonts in bold
 xterm*AllowBoldFonts: false
@@ -16,7 +16,7 @@ xterm*AllowBoldFonts: false
 ! cols x lines ... update with values from $(echo $COLUMNS) and $(echo $LINES)
 ! xterm*geometry: 126x52
 
-! enable utf-8 encoding - doesnt actually work!
+! enable utf-8 encoding - doesnt actually work for terminus!
 xterm*locale: true
 xterm*utf8: 2
 
@@ -43,7 +43,7 @@ URxvt.letterSpace: 0
 ! disable the scrollbar - my mouse has a wheel lol
 URxvt.scrollBar: false
 
-! map F11 to fullscreen
+! map F11 to fullscreen. runs code in ~/.urxvt/ext/fullscreen
 URxvt.perl-ext-common: fullscreen
 URxvt.keysym.F11: perl:fullscreen:switch
 
@@ -90,13 +90,19 @@ URxvt.keysym.F11: perl:fullscreen:switch
 *color9: #EF2929
 ! green
 *colorA: #8AE234
+*color10: #8AE234
 ! yellow
 *colorB: #FCE94F
+*color11: #FCE94F
 ! blue
 *colorC: #729FCF
+*color12: #729FCF
 ! magenta
 *colorD: #AD7FA8
+*color13: #AD7FA8
 ! cyan
 *colorE: #34E2E2
+*color14: #34E2E2
 ! white
 *colorF: #EEEEEC
+*color15: #EEEEEC

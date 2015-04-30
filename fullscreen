@@ -1,0 +1,12 @@
+#!perl
+
+# this file contains a function which toggles the current window fullscreen. it
+# is generally assigned to f11 in ~/.Xresources
+# place this file at ~/.urxvt/ext/fullscreen. it need not be executable
+
+sub on_user_command {
+	my ($self, $cmd) = @_;
+	if ($cmd eq "fullscreen:switch") {
+		my $dummy = `wmctrl -r :ACTIVE: -b toggle,fullscreen`;
+	}
+}

@@ -76,7 +76,8 @@ fi
 # or over ssh
 IS_PTS=$(tty | grep pts)
 PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
-[ "$IS_PTS" ] && [ "$PARENT_PROG" != "sshd" ] && [ "$PARENT_PROG" != "screen" ] && amixer sset 'Master' 20%
+[ "$IS_PTS" ] && [ "$PARENT_PROG" != "sshd" ] && \
+[ "$PARENT_PROG" != "screen" ] && amixer sset 'Master' 20%
 
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
@@ -89,6 +90,10 @@ export LANGUAGE=en_AU.UTF-8
 
 # final logon actions:
 
-# go straight to x on login. only do this for tty1 so that we can still use the other tty consoles withouth starting x. also only do this when there is not already a display, otherwise the xterm will try and do this after x starts aswell
+# go straight to x on login. only do this for tty1 so that we can still use the
+# other tty consoles withouth starting x. also only do this when there is no
+# display, otherwise the terminal will try and do this after x starts aswell
 [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx
-echo "in urxvt press F11 for fullscreen"
+
+# if using rxvt or urxvt set the window to fullscreen
+[[ $TERM == *"rxvt"* ]] && wmctrl -r :ACTIVE: -b add,fullscreen
