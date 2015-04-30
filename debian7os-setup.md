@@ -215,7 +215,13 @@ link the .vimrc file to the /root/ directory so that sudo vi has colors too:
 
 #### stop the cursor from blinking (if using the gui gnome terminal)
 
+for older versions of gnome terminal:
+
     gconftool-2 --set /apps/gnome-terminal/profiles/Default/cursor_blink_mode --type string off
+
+for newer versions:
+
+    gsettings set org.gnome.desktop.interface cursor-blink false
 
 #### setup the tty font size to avoid eye strain:
 
