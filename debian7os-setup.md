@@ -423,6 +423,14 @@ make sure the server has a name:
     echo "ServerName myservername" > /tmp/servername
     sudo mv /tmp/servername /etc/apache2/conf.d/
 
+prevent apache2 from running on boot:
+
+    sudo update-rc.d apache2 disable
+
+get apache2 to run on boot:
+
+    sudo update-rc.d apache2 enable
+
 set the correct permissions on `/var/www` (http://superuser.com/questions/19318)
 
     sudo chgrp -R www-data /var/www
