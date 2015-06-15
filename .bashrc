@@ -86,7 +86,7 @@ PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
 
-PATH=/usr/local/bin:/usr/bin:/bin:/sbin
+PATH=/usr/local/bin:/usr/bin:/bin:/sbin:/usr/include/i386-linux-gnu/qt5/QtCore
 
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
