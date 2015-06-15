@@ -5,7 +5,11 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options ... or force ignoredups and ignorespace
+# bash history yyyy-mm-dd HH:MM:SS
+HISTTIMEFORMAT="%F %T "
+
+# don't put duplicate lines in the history. See bash(1) for more options ...
+# or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
 # append to the history file, don't overwrite it
@@ -77,7 +81,7 @@ fi
 IS_PTS=$(tty | grep pts)
 PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
 [ "$IS_PTS" ] && [ "$PARENT_PROG" != "sshd" ] && \
-[ "$PARENT_PROG" != "screen" ] && amixer sset 'Master' 20%
+[ "$PARENT_PROG" != "screen" ] && amixer sset 'Master' 40%
 
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
