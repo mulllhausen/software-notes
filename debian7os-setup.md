@@ -596,52 +596,83 @@ then type:
 
     @reboot sudo -u bob /usr/bin/freenet start 2>&1 >/tmp/freenet.cron-out
 
-#### install bitcoind from source
+#### install bitcoin from source
 
-instructions for debian wheezy: http://wp.geeklab.com.ar/gl-en/2013/03/11/how-to-install-bitcoin-0-8-0-on-debian-wheezy-amd64/
-
-first add the line `deb-src http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu precise main` to `/etc/apt/sources.list`
-
-then add the key in apt:
-
-    sudo gpg --keyserver hkp://subkeys.pgp.net --recv-keys D46F45428842CE5E
-    sudo gpg --export --armor D46F45428842CE5E | sudo apt-key add --
-
-then update the repository info on the local machine:
-
-    sudo apt-get update
-    sudo apt-get install dpkg-dev qt4-qmake libdb5.1++-dev libqt4-dev libqrencode-dev libminiupnpc-dev libboost-test1.49-dev zlib1g lib32z1 libc6-i386 debhelper devscripts bash-completion libboost-system-dev libssl-dev pkg-config libboost-filesystem-dev libboost-program-options-dev libboost-thread-dev libboost-test-dev
-
-create the directory to house the bitcoin source and download the source:
+first things first, create a directory to house bitcoin-related files, including the source code and later on the binary files:
 
     sudo mkdir /usr/local/src/bitcoin
-    cd /usr/local/src/bitcoin
-    sudo apt-get source bitcoin
-    cd bitcoin-* # will cd into something like the bitcoin-0.8.5 dir
 
-add the following lines to the top of the `/usr/local/src/bitcoin/bitcoin-*/debian/changelog` file:
+###### securely downloading the bitcoin software
 
-    "bitcoin (0.8.5-wheezy1) wheezy; urgency=low
+we want to make sure we have a version of the bitcoin software that has been verified by all of the core developers. this way we can be sure that nobody is tricking us into thinking we own money we do not, or do not own money we actually do own. and of course if the software contains malware then far worse tricks could be played!
 
-      * Mark for wheezy.
+so to securely download and verify bitcoin we first need to securely get the pgp key of all the core developers, then get the bitcoin tar.gz file, take its sha256, ensure this sha256 value exists in the SHA256SUMS.asc file, and finally validate the SHA256SUMS.asc file with each of the core developers keys.
 
-     -- Matt Corallo <matt@bluematt.me>  Sat, 16 Sep 2013 14:02:00 -0400
-    "
-now compile bitcoind and install:
+fisrst download the pgp keys of the core dev team:
 
-    sudo /usr/local/src/bitcoin/bitcoin-*/debian/rules clean
-    sudo /usr/local/src/bitcoin/bitcoin-*/debian/rules binary
-    cd /usr/local/src/bitcoin
-    sudo dpkg -i bitcoind_0.8.5-wheezy1_amd64.deb
+    sudo wget https://bitcoin.org/laanwj.asc -P /usr/local/src/bitcoin/
+    sudo wget https://bitcoin.org/gavinandresen.asc -P /usr/local/src/bitcoin/
+    sudo wget https://bitcoin.org/jgarzik-bitpay.asc -P /usr/local/src/bitcoin/
+    sudo wget https://bitcoin.org/gmaxwell.asc -P /usr/local/src/bitcoin/
+    sudo wget https://bitcoin.org/pieterwuille.asc -P /usr/local/src/bitcoin/
 
-don't install bitcoin-qt - use the armory client as its much better. if you did want to install it though:
+now download the latest bitcoin source (eg for 0.10.2):
 
-    sudo dpkg -i bitcoin-qt_0.8.5-wheezy1_amd64.deb 
+    sudo wget https://bitcoin.org/bin/bitcoin-core-0.10.2/bitcoin-0.10.2.tar.gz -P /usr/local/src/bitcoin/
 
-now make sure that `~/.bitcoin/bitcoin.conf` exists and has an rpc password, then test bitcoind:
+and finally download the sha256 sums file for this release:
+
+    sudo wget https://bitcoin.org/bin/bitcoin-core-0.10.2/SHA256SUMS.asc -P /usr/local/src/bitcoin/
+
+now check that the sha256 of the bitcoin tar.gz exists in the SHA256SUMS.asc file:
+
+    cd /usr/local/src/bitcoin/
+    grep $(sudo sha256sum bitcoin-0.10.2.tar.gz) SHA256SUMS.asc
+
+make sure that the above command returns some output. if no output is found then this download of the bitcoin tar.gz file is unverified and is probably malware that you should not install.
+
+add the core dev pgp keys:
+
+    gpg --import /usr/local/src/bitcoin/laanwj.asc
+    gpg --import /usr/local/src/bitcoin/gavinandresen.asc
+    gpg --import /usr/local/src/bitcoin/jgarzik-bitpay.asc
+    gpg --import /usr/local/src/bitcoin/gmaxwell.asc
+    gpg --import /usr/local/src/bitcoin/pieterwuille.asc
+
+and finally verify the SHA256SUMS.asc file against the core developers keys:
+
+    gpg --verify /usr/local/src/bitcoin/SHA256SUMS.asc
+
+if you see something like this:
+
+    gpg: Signature made Tue 19 May 2015 16:08:55 CST using RSA key ID 2346C9A6
+    gpg: Cant check signature: public key not found
+
+then the SHA256SUMS.asc file has not been signed. however if you see something like this:
+
+    gpg: Signature made Tue 19 May 2015 16:08:55 CST using RSA key ID 2346C9A6
+    gpg: Good signature from "Wladimir J. van der Laan <laanwj@gmail.com>"
+    gpg: WARNING: This key is not certified with a trusted signature!
+    gpg:          There is no indication that the signature belongs to the owner.
+
+then all is well. this basically says someone calling themself "Wladimir J. van der Laan <laanwj@gmail.com>" with the laanwj.asc pgp key file has signed this SHA256SUMS.asc file. don't worry about the WARNING - this just means that you have not personally verified Wladimir's pgp key with your own, so somebody could actually be posing as Wladimir and signing malware versions of bitcoin. the only assurance against this is that you contact multiple people who know Wladimir, including him personally, and confirm that they all have the same pgp key file as you do.
+
+###### building the downloaded tar.gz file and installing it
+
+extract the tar.gz into `/usr/local/src/bitcoin/`:
+
+    tar -zxvf bitcoin-0.10.2.tar.gz
+
+all the instructions to install bitcoin are located in `/usr/local/src/bitcoin/bitcoin-0.10.2/doc/build-unix.md`. if you are already using berkley db then this may be incompatible with the bitcoin version of berkley db, in which case just configure bitcoin like so:
+
+    ./configure --with-incompatible-bdb
+
+the instructions require you to run autogen.sh in the bitcoin root dir however this file did not exist when i downloaded the bitcoin source. dont worry though - it seems to build fine without this.
+
+finally make sure that `~/.bitcoin/bitcoin.conf` exists and has an rpc password, then test bitcoind:
 
     bitcoind &
-    bitcoind getinfo
+    bitcoin-cli getinfo
 
 if all is working then you should see a json output. if there is no output then this could be because the daemon has not yet connected to its peers, if so then just wait a while and try again.
 
@@ -654,8 +685,6 @@ then type:
     @reboot sudo -u bob /usr/bin/bitcoind 2>&1 >/tmp/bitcoind.cron-out
 
 save and exit
-
-note that bitcoind probably can't run as root without the above setup
 
 #### install the armory client for bitcoin on debian from source
 
