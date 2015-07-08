@@ -676,13 +676,13 @@ finally make sure that `~/.bitcoin/bitcoin.conf` exists and has an rpc password,
 
 if all is working then you should see a json output. if there is no output then this could be because the daemon has not yet connected to its peers, if so then just wait a while and try again.
 
-now make bitcoind run when the pc boots:
+now to make bitcoind automatically run under user bob when the pc boots - as user bob:
 
-    sudo crontab -e
+    crontab -e
 
 then type:
 
-    @reboot sudo -u bob /usr/bin/bitcoind 2>&1 >/tmp/bitcoind.cron-out
+    @reboot /path/to/bitcoind 2>&1 >/tmp/bitcoind.cron-out
 
 save and exit
 
