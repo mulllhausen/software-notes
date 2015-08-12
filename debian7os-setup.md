@@ -493,8 +493,11 @@ if there is an intermediate certificate (pem) file then download it and place it
 
 concatenate the crt and pem files:
 
+    sudo touch x
+    sudo chown bob:bob x
     cat myhostname.com.crt myhostname.com.intermediate.pem > x
     mv x myhostname.com.crt
+    sudo chown root:root myhostname.com.crt
 
 secure all file permissions:
 
