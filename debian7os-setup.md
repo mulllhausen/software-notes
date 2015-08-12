@@ -461,8 +461,8 @@ enter a password. you will need this every time you restart your webserver. note
 
 now generate the certificate signing request (csr) file
 
-    cd /etc/ssl/
-    openssl req -new -key myhostname.com.key -out myhostname.com.csr
+    cd /etc/ssl/certs
+    openssl req -new -key /etc/ssl/private/myhostname.com.key -out myhostname.com.csr
 
 for each of the prompts enter:
 
@@ -659,7 +659,7 @@ note that bitcoind probably can't run as root without the above setup
 
 #### install the armory client for bitcoin on debian from source
 
-    cd /usr/local/src/
+    cd /usr/local/src
 
 install git to download the source, and any missing dependencies for the installation process:
 
@@ -680,7 +680,7 @@ finally, put armory on the `$PATH` so that it can be run from anywhere:
 #### download znort987's blockparser program
 
     sudo apt-get install libssl-dev build-essential g++-4.4 libboost-all-dev libsparsehash-dev git-core perl
-    cd /usr/local/src/
+    cd /usr/local/src
     sudo git clone git://github.com/znort987/blockparser.git
     cd blockparser
     sudo make
