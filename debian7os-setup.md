@@ -626,7 +626,7 @@ and finally download the sha256 sums file for this release:
 
 now check that the sha256 of the bitcoin tar.gz exists in the SHA256SUMS.asc file:
 
-    cd /usr/local/src/bitcoin/
+    cd /usr/local/src/bitcoin
     grep $(sudo sha256sum bitcoin-0.10.2.tar.gz) SHA256SUMS.asc
 
 make sure that the above command returns some output. if no output is found then this download of the bitcoin tar.gz file is unverified and is probably malware that you should not install.
