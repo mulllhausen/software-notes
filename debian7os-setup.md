@@ -455,6 +455,7 @@ log out and log back in to be able to make changes
 this allows you to send and receive encrypted data, and to authenticate remote clients and browsers. ssl is used with webservers and email servers. this aim of this process is to create the following files:
 
     /etc/ssl/private/myhostname.com.key
+    /etc/ssl/private/myhostname.com.unencrypted.key
     /etc/ssl/certs/myhostname.com.csr
     /etc/ssl/certs/myhostname.com.crt
     /etc/ssl/certs/myhostname.com.intermediate.pem (optional)
@@ -466,6 +467,11 @@ first generate a private rsa (key) file
     openssl genrsa -out myhostname.com.key -des3 2048
 
 enter a password. you will need this every time you restart your webserver. note that this file is never shared with anyone (not even the ssl certificate provider).
+
+some programs (eg postfix) do not work with a key that has a password. for these programs you must decrypt and save the password protected key file:
+
+    cd /etc/ssl/private
+    openssl rsa -in myhostname.com.key -out myhostname.com.unencrypted.key
 
 now generate the certificate signing request (csr) file
 
@@ -557,7 +563,7 @@ to check that the certificate is recognized open your browser and navigate to `h
 
 this allows you to encrypt email and authenticate remote smtp clients and servers. first make sure the following files exist:
 
-    /etc/ssl/private/myhostname.com.key
+    /etc/ssl/private/myhostname.com.unencrypted.key
     /etc/ssl/certs/myhostname.com.crt
     /etc/ssl/certs/rootca.pem (eg startcom_ca.pem if you are using the startssl.com ca)
 
@@ -571,15 +577,16 @@ add the following lines to `/etc/postfix/main.cf` (see https://help.ubuntu.com/c
     smtpd_tls_received_header = yes
     smtpd_tls_loglevel = 1
     tls_random_source = dev:/dev/urandom
-    smtpd_tls_key_file = /etc/ssl/private/myhostname.com.key
+    smtpd_tls_key_file = /etc/ssl/private/myhostname.com.unencrypted.key
     smtpd_tls_cert_file = /etc/ssl/certs/myhostname.com.crt
     smtpd_tls_CAfile = /etc/ssl/certs/rootca.pem # (eg startcom_ca.pem if you are using the startssl.com ca)
     smtpd_use_tls = yes
     smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
     smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
-and restart the postfix email server:
+note that postfix will not work if you supply an encrypted private key - so you must refer to the unencrypted private key file in the postfix config. finally reload the config file and restart the postfix email server:
 
+	sudo postfix reload
     sudo /etc/init.d/postfix restart
 
 #### set up an ssl certificate for the dovecot imap email server
