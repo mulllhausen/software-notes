@@ -457,8 +457,8 @@ this allows you to send and receive encrypted data, and to authenticate remote c
     /etc/ssl/private/myhostname.com.key
     /etc/ssl/certs/myhostname.com.csr
     /etc/ssl/certs/myhostname.com.crt
-	/etc/ssl/certs/myhostname.com.root.pem
-	/etc/ssl/certs/myhostname.com.intermediate.pem (optional)
+    /etc/ssl/certs/myhostname.com.intermediate.pem (optional)
+    /etc/ssl/certs/rootca.pem (eg startcom_ca.pem for the startssl.com ca if not already available)
 
 first generate a private rsa (key) file
 
@@ -497,7 +497,11 @@ add the http://www.myhostname.com domain (if you want more subdomains you'll pro
 
 download the crt file and place it in `/etc/ssl/certs/myhostname.com.crt`
 
-if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem` and also download the root certificate authority file and place it in `/etc/ssl/certs/myhostname.com.root.pem`
+if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`.
+
+if the root certificate authority file is not in `/etc/ssl/certs` (eg `/etc/ssl/certs/startcom_ca.pem` for startssl.com) then also download this file and place it in `/usr/share/ca-certificates/mozilla/startcom_ca.pem` then link to it like so:
+
+    sudo ln -s /usr/share/ca-certificates/mozilla/startcom_ca.pem /etc/ssl/certs/startcom_ca.pem
 
 concatenate the crt and intermediate pem file:
 
@@ -555,9 +559,9 @@ this allows you to encrypt email and authenticate remote smtp clients and server
 
     /etc/ssl/private/myhostname.com.key
     /etc/ssl/certs/myhostname.com.crt
-	/etc/ssl/certs/myhostname.com.root.pem
+    /etc/ssl/certs/rootca.pem (eg startcom_ca.pem if you are using the startssl.com ca)
 
-if they do not exist then run through the **set up an ssl certificate** process to generate them.
+if they do not exist then you should run through the **set up an ssl certificate** process to generate them.
 
 add the following lines to `/etc/postfix/main.cf` (see https://help.ubuntu.com/community/Postfix and `/usr/share/doc/postfix/TLS_README.gz` for explanations)
 
@@ -567,9 +571,9 @@ add the following lines to `/etc/postfix/main.cf` (see https://help.ubuntu.com/c
     smtpd_tls_received_header = yes
     smtpd_tls_loglevel = 1
     tls_random_source = dev:/dev/urandom
-    smtpd_tls_CAfile = /etc/ssl/certs/myhostname.com.root.pem
-    smtpd_tls_cert_file = /etc/ssl/certs/myhostname.com.crt
     smtpd_tls_key_file = /etc/ssl/private/myhostname.com.key
+    smtpd_tls_cert_file = /etc/ssl/certs/myhostname.com.crt
+    smtpd_tls_CAfile = /etc/ssl/certs/rootca.pem # (eg startcom_ca.pem if you are using the startssl.com ca)
     smtpd_use_tls = yes
     smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
     smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
@@ -585,14 +589,14 @@ this allows you to encrypt the connection between the imap server and its client
     /etc/ssl/private/myhostname.com.key
     /etc/ssl/certs/myhostname.com.crt
 
-if they do not exist then run through the **set up an ssl certificate** process to generate them.
+if they do not exist then you should run through the **set up an ssl certificate** process to generate them.
 
 add the following lines to `/etc/dovecot/dovecot.conf`:
 
     ssl_disable = no
     verbose_ssl = yes
-    ssl_cert_file = /etc/ssl/certs/myhostname.com.crt
     ssl_key_file = /etc/ssl/private/myhostname.com.key
+    ssl_cert_file = /etc/ssl/certs/myhostname.com.crt
 
 and restart dovecot:
 
