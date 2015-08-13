@@ -450,9 +450,17 @@ now add your own user to the www-data group
 
 log out and log back in to be able to make changes
 
-#### set up an ssl certificate for your website
+#### set up an ssl certificate
 
-this allows you to send and receive encrypted data over http. first generate a private rsa (key) file
+this allows you to send and receive encrypted data, and to authenticate remote clients and browsers. ssl is used with webservers and email servers. this aim of this process is to create the following files:
+
+    /etc/ssl/private/myhostname.com.key
+    /etc/ssl/certs/myhostname.com.csr
+    /etc/ssl/certs/myhostname.com.crt
+	/etc/ssl/certs/myhostname.com.root.pem
+	/etc/ssl/certs/myhostname.com.intermediate.pem (optional)
+
+first generate a private rsa (key) file
 
     cd /etc/ssl/private
     openssl genrsa -out myhostname.com.key -des3 2048
@@ -489,9 +497,9 @@ add the http://www.myhostname.com domain (if you want more subdomains you'll pro
 
 download the crt file and place it in `/etc/ssl/certs/myhostname.com.crt`
 
-if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`
+if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem` and also download the root certificate authority file and place it in `/etc/ssl/certs/myhostname.com.root.pem`
 
-concatenate the crt and pem files:
+concatenate the crt and intermediate pem file:
 
     sudo touch x
     sudo chown bob:bob x
@@ -499,10 +507,20 @@ concatenate the crt and pem files:
     mv x myhostname.com.crt
     sudo chown root:root myhostname.com.crt
 
-secure all file permissions:
+finally secure all file permissions:
 
     chmod 640 /etc/ssl/private/myhostname.com.key
     chmod 644 /etc/ssl/certs/myhostname.com*
+
+#### set up an ssl certificate for apache2 webserver
+
+first make sure the following files exist:
+
+    /etc/ssl/private/myhostname.com.key
+    /etc/ssl/certs/myhostname.com.crt
+	/etc/ssl/certs/myhostname.com.intermediate.pem (optional)
+
+if they do not exist then run through the *set up an ssl certificate* process to generate them.
 
 now open the apache2 config file (either `/etc/apache2/sites-enabled/000-default` or `/etc/apache2/sites-enabled/default-ssl`) and add/update the following lines
 
@@ -530,6 +548,64 @@ if you see a fail message then apache may be using a default password. this is d
 once you find this entry then comment it out with a #. then restart apache2 again and make sure it doesn't fail this time.
 
 to check that the certificate is recognized open your browser and navigate to `https://myhostname.com`. right click on the padlock and make sure the date of the certificate begins on the current date.
+
+#### set up an ssl certificate for the postfix email server
+
+this allows you to encrypt email and authenticate remote smtp clients and servers. first make sure the following files exist:
+
+    /etc/ssl/private/myhostname.com.key
+    /etc/ssl/certs/myhostname.com.crt
+	/etc/ssl/certs/myhostname.com.root.pem
+
+if they do not exist then run through the **set up an ssl certificate** process to generate them.
+
+add the following lines to `/etc/postfix/main.cf` (see https://help.ubuntu.com/community/Postfix and `/usr/share/doc/postfix/TLS_README.gz` for explanations)
+
+    # tls parameters
+    smtpd_tls_auth_only = no
+    smtp_tls_note_starttls_offer = yes
+    smtpd_tls_received_header = yes
+    smtpd_tls_loglevel = 1
+    tls_random_source = dev:/dev/urandom
+    smtpd_tls_CAfile = /etc/ssl/certs/myhostname.com.root.pem
+    smtpd_tls_cert_file = /etc/ssl/certs/myhostname.com.crt
+    smtpd_tls_key_file = /etc/ssl/private/myhostname.com.key
+    smtpd_use_tls = yes
+    smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+    smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+and restart the postfix email server:
+
+    sudo /etc/init.d/postfix restart
+
+#### set up an ssl certificate for the dovecot imap email server
+
+this allows you to encrypt the connection between the imap server and its clients. first make sure the following files exist:
+
+    /etc/ssl/private/myhostname.com.key
+    /etc/ssl/certs/myhostname.com.crt
+
+if they do not exist then run through the **set up an ssl certificate** process to generate them.
+
+add the following lines to `/etc/dovecot/dovecot.conf`:
+
+    ssl_disable = no
+    verbose_ssl = yes
+    ssl_cert_file = /etc/ssl/certs/myhostname.com.crt
+    ssl_key_file = /etc/ssl/private/myhostname.com.key
+
+and restart dovecot:
+
+    sudo /etc/init.d/dovecot stop
+    sudo dovecot -p
+
+dovecot should prompt you for the password.
+
+finally check that the ssl certificate has been correctly loaded by dovecot:
+
+    sudo openssl s_client -connect localhost:143 -starttls imap -CApath /dev/null
+
+and make sure that there are no errors in any of the output. for an example of erroneous output see http://superuser.com/questions/496767/dovecot-imap-ssl-certificate-issues
 
 #### install mysql
 
