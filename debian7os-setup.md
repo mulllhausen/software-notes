@@ -503,13 +503,13 @@ add the http://www.myhostname.com domain (if you want more subdomains you'll pro
 
 download the crt file and place it in `/etc/ssl/certs/myhostname.com.crt`
 
-if there is an intermediate certificate (pem) file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`.
+if there is an intermediate certificate file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`.
 
 if the root certificate authority file is not in `/etc/ssl/certs` (eg `/etc/ssl/certs/startcom_ca.pem` for startssl.com) then also download this file and place it in `/usr/share/ca-certificates/mozilla/startcom_ca.pem` then link to it like so:
 
     sudo ln -s /usr/share/ca-certificates/mozilla/startcom_ca.pem /etc/ssl/certs/startcom_ca.pem
 
-concatenate the crt and intermediate pem file:
+if your certificate authority provided you with an intermediate crt file then its a good idea to concatenate it into the crt file. this way any clients (eg web browsers) which cannot obtain the intermediate crt file from the certificate authority directly, or which do not have this certificate on disk will download and verify it as part of the ssl handshake process. make sure the intermediate file is in pem (not der) format, then concatenate the crt and intermediate pem files:
 
     sudo touch x
     sudo chown bob:bob x
@@ -517,10 +517,32 @@ concatenate the crt and intermediate pem file:
     mv x myhostname.com.crt
     sudo chown root:root myhostname.com.crt
 
-finally secure all file permissions:
+secure all file permissions:
 
     chmod 640 /etc/ssl/private/myhostname.com.key
     chmod 644 /etc/ssl/certs/myhostname.com*
+
+and create any missing pem files for root certificates in your `certs` dir:
+
+    sudo c_rehash /etc/ssl/certs
+
+and finally, verify the chain of certificates: rootca -> intermediate -> myhost crt. first validate the intermediate against the root:
+
+    cd /etc/ssl/certs
+    openssl verify -CAfile rootca.pem myhostname.com.intermediate.pem
+
+if the intermediate certificate is derived from the root certificate then this will output
+
+    myhostname.com.intermediate.pem: OK
+
+and finally validate myhostname.com's certificate:
+
+    cd /etc/ssl/certs
+    openssl verify -CAfile myhostname.com.intermediate.pem myhostname.com.crt
+
+if myhostname's certificate is derived from the intermediate then this will output
+
+    myhostname.com.crt: OK
 
 #### set up an ssl certificate for apache2 webserver
 
@@ -538,6 +560,7 @@ now open the apache2 config file (either `/etc/apache2/sites-enabled/000-default
 	    SSLEngine on
         SSLCertificateKeyFile /etc/ssl/private/myhostname.com.key
         SSLCertificateFile /etc/ssl/certs/myhostname.com.crt
+		# if you have an intermediate certificate then include the following line:
         SSLCertificateChainFile /etc/ssl/certs/myhostname.com.intermediate.pem
         ServerSignature On
     </VirtualHost>
@@ -605,7 +628,7 @@ add the following lines to `/etc/dovecot/dovecot.conf`:
     ssl_key_file = /etc/ssl/private/myhostname.com.key
     ssl_cert_file = /etc/ssl/certs/myhostname.com.crt
 
-and restart dovecot:
+and restart dovecot with the password prompt:
 
     sudo /etc/init.d/dovecot stop
     sudo dovecot -p
@@ -614,7 +637,7 @@ dovecot should prompt you for the password.
 
 finally check that the ssl certificate has been correctly loaded by dovecot:
 
-    sudo openssl s_client -connect localhost:143 -starttls imap -CApath /dev/null
+    sudo openssl s_client -connect localhost:143 -starttls imap -CAfile /etc/ssl/certs/rootca.pem
 
 and make sure that there are no errors in any of the output. for an example of erroneous output see http://superuser.com/questions/496767/dovecot-imap-ssl-certificate-issues
 
