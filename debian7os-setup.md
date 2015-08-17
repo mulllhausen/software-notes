@@ -450,7 +450,7 @@ now add your own user to the www-data group
 
 log out and log back in to be able to make changes
 
-#### set up an ssl certificate
+#### set up ssl certificates
 
 this allows you to send and receive encrypted data, and to authenticate remote clients and browsers. ssl is used with webservers and email servers. this aim of this process is to create the following files:
 
@@ -458,6 +458,7 @@ this allows you to send and receive encrypted data, and to authenticate remote c
     /etc/ssl/private/myhostname.com.unencrypted.key
     /etc/ssl/certs/myhostname.com.csr
     /etc/ssl/certs/myhostname.com.crt
+    /etc/ssl/certs/mail.myhostname.com.crt (only necessary if myhostname.com.crt does not have wildcard subdomains)
     /etc/ssl/certs/myhostname.com.intermediate.pem (optional)
     /etc/ssl/certs/rootca.pem (eg startcom_ca.pem for the startssl.com ca if not already available)
 
@@ -493,29 +494,56 @@ for each of the prompts enter:
 
 navigate to startssl.com (or any other certificate authority) and sign up to get a p12 key to login
 
-select the option to generate a webserver certificate
+##### create a certificate for the `www` subdomain
+
+select the option to generate a webserver ssl/tls certificate
 
 skip the step where you generate the private key (csr file) since this was already done at the start of the process
 
-copy your csr file and paste it into the website
+copy the content of `/etc/ssl/certs/myhostname.com.csr` and paste it into the certificate authority website
 
-add the http://www.myhostname.com domain (if you want more subdomains you'll probably have to pay though)
+add the `www` subdomain - ie `http://www.myhostname.com`. if you want more subdomains you'll probably have to pay though.
 
 download the crt file and place it in `/etc/ssl/certs/myhostname.com.crt`
 
 if there is an intermediate certificate file then download it and place it in `/etc/ssl/certs/myhostname.com.intermediate.pem`.
 
-if the root certificate authority file is not in `/etc/ssl/certs` (eg `/etc/ssl/certs/startcom_ca.pem` for startssl.com) then also download this file and place it in `/usr/share/ca-certificates/mozilla/startcom_ca.pem` then link to it like so:
+if the root certificate authority file is not in `/etc/ssl/certs` (eg `/etc/ssl/certs/startcom_ca.pem` for startcom) then also download this file and place it in `/usr/share/ca-certificates/mozilla/startcom_ca.pem` then link to it like so:
 
     sudo ln -s /usr/share/ca-certificates/mozilla/startcom_ca.pem /etc/ssl/certs/startcom_ca.pem
 
-if your certificate authority provided you with an intermediate crt file then its a good idea to concatenate it into the crt file. this way any clients (eg web browsers) which cannot obtain the intermediate crt file from the certificate authority directly, or which do not have this certificate on disk will download and verify it as part of the ssl handshake process. make sure the intermediate file is in pem (not der) format, then concatenate the crt and intermediate pem files:
+if your certificate authority provided you with an intermediate crt file then its a good idea to concatenate it into the crt file. this way any clients (eg web browsers or mail clients) which cannot obtain the intermediate crt file from the certificate authority directly, or which do not have this certificate on disk will download and verify it as part of the ssl handshake process. make sure the intermediate file is in pem (not der) format, then concatenate the crt and intermediate pem files:
 
+    cd /etc/ssl/certs
     sudo touch x
     sudo chown bob:bob x
     cat myhostname.com.crt myhostname.com.intermediate.pem > x
     mv x myhostname.com.crt
     sudo chown root:root myhostname.com.crt
+
+##### create a certificate for the `mail` subdomain
+
+select the option to generate a webserver ssl/tls certificate
+
+skip the step where you generate the private key (csr file) since this was already done at the start of the process
+
+copy the content of `/etc/ssl/certs/myhostname.com.csr` and paste it into the certificate authority website
+
+add the `mail` subdomain - ie `http://mail.myhostname.com`. if you want more subdomains you'll probably have to pay though.
+
+download the crt file and place it in `/etc/ssl/certs/mail.myhostname.com.crt`
+
+there is no need to download the intermediate and root certificate authority pem files again - these are the same for all subdomains.
+
+again, concatenate the intermediate crt file with the mail.myhostname.crt file:
+
+    sudo touch x
+    sudo chown bob:bob x
+    cat mail.myhostname.com.crt myhostname.com.intermediate.pem > x
+    mv x mail.myhostname.com.crt
+    sudo chown root:root mail.myhostname.com.crt
+
+##### securing and checking the ssl certificates
 
 secure all file permissions:
 
@@ -535,14 +563,16 @@ if the intermediate certificate is derived from the root certificate then this w
 
     myhostname.com.intermediate.pem: OK
 
-and finally validate myhostname.com's certificate:
+and validate `myhostname.com` and `mail.myhostname.com`'s certificates:
 
     cd /etc/ssl/certs
     openssl verify -CAfile myhostname.com.intermediate.pem myhostname.com.crt
+    openssl verify -CAfile myhostname.com.intermediate.pem mail.myhostname.com.crt
 
 if myhostname's certificate is derived from the intermediate then this will output
 
     myhostname.com.crt: OK
+    mail.myhostname.com.crt: OK
 
 #### set up an ssl certificate for apache2 webserver
 
@@ -587,7 +617,7 @@ to check that the certificate is recognized open your browser and navigate to `h
 this allows you to encrypt email and authenticate remote smtp clients and servers. first make sure the following files exist:
 
     /etc/ssl/private/myhostname.com.unencrypted.key
-    /etc/ssl/certs/myhostname.com.crt
+    /etc/ssl/certs/mail.myhostname.com.crt
     /etc/ssl/certs/rootca.pem (eg startcom_ca.pem if you are using the startssl.com ca)
 
 if they do not exist then you should run through the **set up an ssl certificate** process to generate them.
@@ -601,7 +631,7 @@ add the following lines to `/etc/postfix/main.cf` (see https://help.ubuntu.com/c
     smtpd_tls_loglevel = 1
     tls_random_source = dev:/dev/urandom
     smtpd_tls_key_file = /etc/ssl/private/myhostname.com.unencrypted.key
-    smtpd_tls_cert_file = /etc/ssl/certs/myhostname.com.crt
+    smtpd_tls_cert_file = /etc/ssl/certs/mail.myhostname.com.crt
     smtpd_tls_CAfile = /etc/ssl/certs/rootca.pem # (eg startcom_ca.pem if you are using the startssl.com ca)
     smtpd_use_tls = yes
     smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
@@ -617,7 +647,7 @@ note that postfix will not work if you supply an encrypted private key - so you 
 this allows you to encrypt the connection between the imap server and its clients. first make sure the following files exist:
 
     /etc/ssl/private/myhostname.com.key
-    /etc/ssl/certs/myhostname.com.crt
+    /etc/ssl/certs/mail.myhostname.com.crt
 
 if they do not exist then you should run through the **set up an ssl certificate** process to generate them.
 
@@ -626,7 +656,7 @@ add the following lines to `/etc/dovecot/dovecot.conf`:
     ssl_disable = no
     verbose_ssl = yes
     ssl_key_file = /etc/ssl/private/myhostname.com.key
-    ssl_cert_file = /etc/ssl/certs/myhostname.com.crt
+    ssl_cert_file = /etc/ssl/certs/mail.myhostname.com.crt
 
 and restart dovecot with the password prompt:
 
@@ -635,9 +665,9 @@ and restart dovecot with the password prompt:
 
 dovecot should prompt you for the password.
 
-finally check that the ssl certificate has been correctly loaded by dovecot:
+finally check that the ssl certificate has been correctly loaded by dovecot from another computer:
 
-    sudo openssl s_client -connect localhost:143 -starttls imap -CAfile /etc/ssl/certs/rootca.pem
+    sudo openssl s_client -connect myhostname.com:143 -starttls imap -CAfile /etc/ssl/certs/rootca.pem
 
 and make sure that there are no errors in any of the output. for an example of erroneous output see http://superuser.com/questions/496767/dovecot-imap-ssl-certificate-issues
 
