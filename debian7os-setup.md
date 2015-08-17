@@ -494,7 +494,7 @@ for each of the prompts enter:
 
 navigate to startssl.com (or any other certificate authority) and sign up to get a p12 key to login
 
-##### create a certificate for the `www` subdomain
+###### create a certificate for the `www` subdomain
 
 select the option to generate a webserver ssl/tls certificate
 
@@ -521,7 +521,7 @@ if your certificate authority provided you with an intermediate crt file then it
     mv x myhostname.com.crt
     sudo chown root:root myhostname.com.crt
 
-##### create a certificate for the `mail` subdomain
+###### create a certificate for the `mail` subdomain
 
 select the option to generate a webserver ssl/tls certificate
 
@@ -543,7 +543,7 @@ again, concatenate the intermediate crt file with the mail.myhostname.crt file:
     mv x mail.myhostname.com.crt
     sudo chown root:root mail.myhostname.com.crt
 
-##### securing and checking the ssl certificates
+###### securing and checking the ssl certificates
 
 secure all file permissions:
 
