@@ -59,6 +59,7 @@ function n() {
 	nohup >> "/tmp/$1.nohup-output" $@ &
 	echo "started running '$@' on $(date). pid is $!" >> "/tmp/$1.nohup-output"
 }
+alias sc='screen -S $(date +%a) -t shel'
 
 # include private aliases
 . ~/.private_aliases 2> /dev/null
@@ -76,7 +77,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# set the sound to 20% of full volume if on a pts (not tty), and if not in screen
+# set the sound to 40% of full volume if on a pts (not tty), and if not in screen
 # or over ssh
 IS_PTS=$(tty | grep pts)
 PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
