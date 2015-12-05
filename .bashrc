@@ -60,6 +60,7 @@ function n() {
 	echo "started running '$@' on $(date). pid is $!" >> "/tmp/$1.nohup-output"
 }
 alias sc='screen -S $(date +%a) -t shel'
+alias vol="amixer sset 'Master'"
 
 # include private aliases
 . ~/.private_aliases 2> /dev/null
