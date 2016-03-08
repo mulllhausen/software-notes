@@ -61,6 +61,9 @@ function n() {
 }
 alias sc='screen -S $(date +%a) -t shel'
 alias vol="amixer sset 'Master'"
+alias h="history | grep"
+alias countfiles="ls -l | wc -l"
+alias la="ls -a | egrep '^\.'"
 
 # include private aliases
 . ~/.private_aliases 2> /dev/null
