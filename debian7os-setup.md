@@ -213,6 +213,10 @@ link the .vimrc file to the /root/ directory so that sudo vi has colors too:
 
     sudo ln -sf /home/bob/.vimrc /root/.vimrc
 
+set vim as the default text editor:
+
+    sudo update-alternatives --config editor
+
 #### stop the cursor from blinking (if using the gui gnome terminal)
 
 for older versions of gnome terminal:
