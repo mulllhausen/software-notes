@@ -56,6 +56,7 @@ set noswapfile
 set nowritebackup
 set sw=4
 set tabstop=4
+set expandtab
 
 " put a white line down column 79 (first column is 1)
 set colorcolumn=80
