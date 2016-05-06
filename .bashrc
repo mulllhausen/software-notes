@@ -102,7 +102,7 @@ export LANGUAGE=en_AU.UTF-8
 # go straight to x on login. only do this for tty1 so that we can still use the
 # other tty consoles withouth starting x. also only do this when there is no
 # display, otherwise the terminal will try and do this after x starts aswell
-[[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx
+[[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx -- :0 vt7
 
 # if using rxvt or urxvt set the window to fullscreen
 [[ $TERM == *"rxvt"* ]] && wmctrl -r :ACTIVE: -b add,fullscreen
