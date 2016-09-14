@@ -59,7 +59,19 @@ function n() {
 	nohup >> "/tmp/$1.nohup-output" $@ &
 	echo "started running '$@' on $(date). pid is $!" >> "/tmp/$1.nohup-output"
 }
-alias sc='screen -S $(date +%a) -t shel'
+
+# delete the old sc alias and replace it with a function
+[[ $(alias | grep "sc=") ]] && unalias sc
+function sc() {
+	if [[ $(screen -ls | grep -i "no sockets found") ]]; then
+		screen -S $(date +%a) -t shel
+	elif [[ $(screen -ls | grep -i "Attached") ]]; then
+		echo "you're already inside a screen, fool."
+	else
+		# attempt to resume. wail fail with instructions if there are multiple screens open
+		screen -r
+	fi
+}
 alias vol="amixer sset 'Master'"
 alias h="history | grep"
 alias countfiles="ls -l | wc -l"
@@ -72,7 +84,8 @@ alias la="ls -a | egrep '^\.'"
 # end aliases and functions
 ##############
 
-# enable programmable completion features (you don't need to enable this, if it's already enabled in /etc/bash.bashrc and /etc/profile sources /etc/bash.bashrc).
+# enable programmable completion features (you don't need to enable this if it's
+#  already enabled in /etc/bash.bashrc and /etc/profile sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
