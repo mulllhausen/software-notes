@@ -18,7 +18,7 @@ wm_pid=$!
 #xterm +u8 -js -fullscreen &
 #xterm -en en_AU.UTF-8 -js -fullscreen &
 
-# run urxvt instead of xterm since this seems able to render greel symbols etc
+# run urxvt instead of xterm since this seems able to render greek symbols etc
 urxvt &
 
 # do not let the window manager become a zombie
