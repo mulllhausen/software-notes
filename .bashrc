@@ -34,7 +34,7 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 # pretty prompt and font colors
-. ~/.pretty_bash_prompt 2> /dev/null
+. ~/.pretty_bash_prompt 1> /dev/null 2>&1
 
 ##############
 # aliases and functions
@@ -99,7 +99,7 @@ fi
 IS_PTS=$(tty | grep pts)
 PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
 [ "$IS_PTS" ] && [ "$PARENT_PROG" != "sshd" ] && \
-[ "$PARENT_PROG" != "screen" ] && amixer sset 'Master' 40%
+[ "$PARENT_PROG" != *"screen"* ] && amixer sset 'Master' 40% 1> /dev/null 2>&1
 
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
@@ -112,10 +112,16 @@ export LANGUAGE=en_AU.UTF-8
 
 # final logon actions:
 
+# welcome some users
+[[ $USER == "peter" && $TERM != *"screen"* ]] && cat .welcome_banner_peter
+
 # go straight to x on login. only do this for tty1 so that we can still use the
 # other tty consoles withouth starting x. also only do this when there is no
 # display, otherwise the terminal will try and do this after x starts aswell
 [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx -- :0 vt7
+
+# wait 1 second for bash to load before issuing the following commands
+sleep 1
 
 # if using rxvt or urxvt set the window to fullscreen
 [[ $TERM == *"rxvt"* ]] && wmctrl -r :ACTIVE: -b add,fullscreen
