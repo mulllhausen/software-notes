@@ -104,7 +104,7 @@ PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
 
-PATH=/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:/usr/include/i386-linux-gnu/qt5/QtCore
+PATH=/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin
 
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
@@ -113,7 +113,10 @@ export LANGUAGE=en_AU.UTF-8
 # final logon actions:
 
 # welcome some users
-[[ $USER == "peter" && $TERM != *"screen"* ]] && cat .welcome_banner_peter
+if [[ $USER == "peter" && $TERM != *"screen"* ]]; then
+    cat .welcome_banner_peter
+    echo -e "welcome to $HOSTNAME\n"
+fi
 
 # go straight to x on login. only do this for tty1 so that we can still use the
 # other tty consoles withouth starting x. also only do this when there is no

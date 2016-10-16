@@ -80,6 +80,10 @@ if &diff
   set diffopt=filler,context:100000000
 endif
 
+" copy to clipboard. run $(apt-get install vim-gui-common) for this to work and
+" run $(vim --version | grep +xterm_clipboard) to see if its installed
+set clipboard=unnamedplus
+
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
 	source /etc/vim/vimrc.local
