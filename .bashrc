@@ -110,8 +110,6 @@ export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 export LANGUAGE=en_AU.UTF-8
 
-# final logon actions:
-
 # welcome some users
 if [[ $USER == "peter" && $TERM != *"screen"* ]]; then
     cat .welcome_banner_peter
@@ -123,8 +121,8 @@ fi
 # display, otherwise the terminal will try and do this after x starts aswell
 [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx -- :0 vt7
 
-# wait 1 second for bash to load before issuing the following commands
-sleep 1
-
-# if using rxvt or urxvt set the window to fullscreen
-[[ $TERM == *"rxvt"* ]] && wmctrl -r :ACTIVE: -b add,fullscreen
+# if using rxvt or urxvt immediately set the window to fullscreen
+if [[ $TERM == *"rxvt"* ]]; then
+    window_name=$(wmctrl -l | grep rxvt | cut -d' ' -f5-)
+    wmctrl -r "$window_name" -b add,fullscreen
+fi
