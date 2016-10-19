@@ -123,6 +123,9 @@ fi
 
 # if using rxvt or urxvt immediately set the window to fullscreen
 if [[ $TERM == *"rxvt"* ]]; then
-    window_name=$(wmctrl -l | grep rxvt | cut -d' ' -f5-)
-    wmctrl -r "$window_name" -b add,fullscreen
+    # make the window with rxvt in the name the active window
+    wmctrl -a rxvt
+
+    # make the active window fullscreen
+    wmctrl -r ":ACTIVE:" -b add,fullscreen
 fi
