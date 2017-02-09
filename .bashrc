@@ -112,14 +112,17 @@ export LANGUAGE=en_AU.UTF-8
 
 # welcome some users
 if [[ $USER == "peter" && $TERM != *"screen"* ]]; then
-    cat ~/.welcome_banner_peter
+    cat ~/.welcome_banner_peter > /dev/null 2>&1
     echo -e "welcome to $HOSTNAME\n"
 fi
 
 # go straight to x on login. only do this for tty1 so that we can still use the
 # other tty consoles withouth starting x. also only do this when there is no
-# display, otherwise the terminal will try and do this after x starts aswell
-[[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && startx -- :0 vt7
+# display, otherwise the terminal will try and do this after x starts aswell.
+# finally, only do it when x is installed.
+[[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && \
+command -v startx > /dev/null 2>&1 && \
+startx -- :0 vt7
 
 # if using rxvt or urxvt immediately set the window to fullscreen
 if [[ $TERM == *"rxvt"* ]]; then
