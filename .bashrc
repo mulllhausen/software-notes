@@ -112,7 +112,7 @@ export LANGUAGE=en_AU.UTF-8
 
 # welcome some users
 if [[ $USER == "peter" && $TERM != *"screen"* ]]; then
-    cat .welcome_banner_peter
+    cat ~/.welcome_banner_peter
     echo -e "welcome to $HOSTNAME\n"
 fi
 
