@@ -74,3 +74,27 @@ add a route to a range of ip addresses:
     $ sudo route add -net 192.168.0.0 netmask 255.255.255.0 gw 192.168.0.104
 
 this means that when you ping any address in the range `192.168.0.0` to `192.168.0.255` it gets redirected via the `192.168.0.104` gateway and then redirected to the specifiec ip address (eg `192.168.0.17`) on the lan which is on the other side of the gateway. if you add this route it will make the previous one superfluous but both will still exist.
+
+#### route traffic over ssh tunnel
+
+create a socks proxy to route all traffic on port 8123 to a remote ssh server (thanks to [digitalocean](https://www.digitalocean.com/community/tutorials/how-to-route-web-traffic-securely-without-a-vpn-using-a-socks-tunnel)):
+
+    $ ssh -D 8123 -f -C -N sammy@example.com
+
+where:
+
+- `-D 8123` creates the socks tunnel on port 8123
+- `-f` forks this ssh command to run in the background
+- `-C` compresses the data before sending it
+- `-N` means no command will be sent to the remote server
+- `sammy@example.com` is the user and server you have ssh access to
+
+verify that the tunnel is up and running with this command:
+
+    $ ps aux | grep ssh
+
+you should see a line in the output like:
+
+    sammy    14345   0.0  0.0  2462228    452   ??  Ss    6:43AM   0:00.00 ssh -D 8123 -f -C -q -N sammy@example.com
+
+now you can use example.com in the same way as a vpn server. for example to browse the web via this "vpn", just configure the socks proxy in firefox with localhost:8123 (http and https proxies must be empty otherwise they take precedence).
