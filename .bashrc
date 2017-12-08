@@ -74,11 +74,38 @@ function sc() {
 }
 alias vol="amixer sset 'Master'"
 alias h="history | grep"
-alias countfiles="ls -l | wc -l"
+# delete the old countfiles alias and replace it with a function
+[[ $(alias | grep "countfiles=") ]] && unalias countfiles
+function countfiles() {
+    if [[ "$@" ]]; then
+        ls -1 $@ | wc -l
+    else
+        ls -1 | wc -l
+    fi
+}
 alias la="ls -a | egrep '^\.'"
+# use like: hostxpra --start-child=program-name
+alias hostxpra="xpra start :100"
+
+# set the monitor brightness (takes a value between 0 and 1)
+# get the monitor name (VGA-1) like so:
+# xrandr -q | grep " connected"
+alias brightness="xrandr --output VGA-1 --brightness"
+
+alias GS="git status"
+
+# provide a quick way to logout i can first exit the window manager with this
+# command, then exit the shell from there to logout
+function l() {
+    if [[ ${wm_pid} == "" ]]; then
+        echo "unable to kill window manager"
+    else
+        kill -9 ${wm_pid}
+    fi
+}
 
 # include private aliases
-. ~/.private_aliases 2> /dev/null
+~/.private_aliases 2> /dev/null
 
 ##############
 # end aliases and functions
@@ -99,7 +126,7 @@ fi
 IS_PTS=$(tty | grep pts)
 PARENT_PROG=$(cat /proc/$PPID/status | head -1 | cut -f2)
 [ "$IS_PTS" ] && [ "$PARENT_PROG" != "sshd" ] && \
-[ "$PARENT_PROG" != *"screen"* ] && amixer sset 'Master' 40% 1> /dev/null 2>&1
+[ "$PARENT_PROG" != *"screen"* ] && vol 100% 1> /dev/null 2>&1
 
 # set tabs to 4 spaces in terminal
 tabs 5,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4,+4
@@ -110,19 +137,19 @@ export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 export LANGUAGE=en_AU.UTF-8
 
-# welcome some users
-if [[ $USER == "peter" && $TERM != *"screen"* ]]; then
-    cat ~/.welcome_banner_peter > /dev/null 2>&1
-    echo -e "welcome to $HOSTNAME\n"
-fi
+# welcome some users, but not on tty1 in linux shell
+~/.welcome_motd 2> /dev/null
 
 # go straight to x on login. only do this for tty1 so that we can still use the
-# other tty consoles withouth starting x. also only do this when there is no
+# other tty consoles without starting x. also only do this when there is no
 # display, otherwise the terminal will try and do this after x starts aswell.
-# finally, only do it when x is installed.
+# finally, only do it when x is installed (command -v startx checks if startx
+# exists).
+# note: as of xorg-server 1.16, x is rootless but can only be started on the
+# current vt (1)
 [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && \
 command -v startx > /dev/null 2>&1 && \
-startx -- :0 vt7
+startx -- :0 vt1
 
 # if using rxvt or urxvt immediately set the window to fullscreen
 if [[ $TERM == *"rxvt"* ]]; then

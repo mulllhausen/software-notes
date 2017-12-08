@@ -47,6 +47,10 @@ URxvt.scrollBar: false
 URxvt.perl-ext-common: fullscreen
 URxvt.keysym.F11: perl:fullscreen:switch
 
+! disable bell
+URxvt.urgentOnBell: false
+URxvt*visualBell: false
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! end urxvt specific settings
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

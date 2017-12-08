@@ -8,22 +8,28 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-MYLAN="192.168.13.0/255.255.255.0"
-MYDNS="192.168.7.7"
+firewall_on=true
 
-# delete everything
+# delete all rules everything (no ports blocked yet)
 iptables -F
 
-# disable the firewall - only use this temporarily
-#iptables -P INPUT ACCEPT
-#iptables -P FORWARD ACCEPT
-#iptables -P OUTPUT ACCEPT
-#exit
+if [ $firewall_on = true ]; then
+    # block all ports and continue
+    iptables -P INPUT DROP
+    iptables -P FORWARD DROP
+    iptables -P OUTPUT DROP
+else
+    # allow everything
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    echo -e "\nthe new firewall rules are:\n"
+    iptables-save
+    exit
+fi
 
-# set default chain policies to drop everything
-iptables -P INPUT DROP
-iptables -P FORWARD DROP
-iptables -P OUTPUT DROP
+# defines $IF0 and $MYLAN
+. ~/.my_ips
 
 ################################################################################
 ### BEGIN localhost RULES
@@ -37,11 +43,11 @@ iptables -A OUTPUT -o lo -p all -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 ################################################################################
 ### BEGIN DNS RULES
 
-# allow outgoing dns requests on MYLAN (and connection responses)
-iptables -A OUTPUT -o eth7 -p udp -d "$MYDNS" --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth7 -p tcp -d "$MYDNS" --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p udp -s "$MYDNS" --sport 53 -m state --state ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p tcp -s "$MYDNS" --sport 53 -m state --state ESTABLISHED -j ACCEPT
+# allow outgoing dns requests (and connection responses)
+iptables -A OUTPUT -o "$IF0" -p udp -d mydns --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp -d mydns --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p udp -s mydns --sport 53 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp -s mydns --sport 54 -m state --state ESTABLISHED -j ACCEPT
 
 ### END DNS RULES
 ################################################################################
@@ -62,12 +68,12 @@ iptables -A OUTPUT -p icmp -j ACCEPT
 ### BEGIN SSH RULES
 
 # allow incoming ssh conections from MYLAN (and connection responses)
-iptables -A INPUT -i eth7 -p tcp -s "$MYLAN" --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth7 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp -s "$MYLAN" --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
 # allow outgoing ssh connections to MYLAN (and connection responses)
-iptables -A OUTPUT -o eth7 -p tcp -d "$MYLAN" --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp -d "$MYLAN" --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
 ### END SSH RULES
 ################################################################################
@@ -78,8 +84,8 @@ iptables -A INPUT -i eth7 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCE
 ### turn these off/on depending on whether you are testing or in production
 
 # allow incoming http/s on MYLAN (and responses)
-iptables -A INPUT -i eth7 -p tcp -s "$MYLAN" -m multiport --dports 80,443 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth7 -p tcp -m multiport --sports 80,443 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp -s "$MYLAN" -m multiport --dports 80,443 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp -m multiport --sports 80,443 -m state --state ESTABLISHED -j ACCEPT
 
 ### END HTTP/S RULES
 ################################################################################
@@ -104,10 +110,10 @@ iptables -A INPUT -p tcp -s "security.debian.org" -m state --state ESTABLISHED -
 # grep -i netbios /etc/services
 # gives ports 137,138,139. 445 is also needed
 
-iptables -A INPUT -i eth7 -p tcp -s 192.168.100.100 -m multiport --sports 137,138,139,445 -j ACCEPT
-iptables -A OUTPUT -o eth7 -p tcp -d 192.168.100.100 -m multiport --dports 137,138,139,445 -j ACCEPT
-iptables -A INPUT -i eth7 -p udp -s 192.168.100.100 -m multiport --sports 137,138,139,445 -j ACCEPT
-iptables -A OUTPUT -o eth7 -p udp -d 192.168.100.100 -m multiport --dports 137,138,139,445 -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp -s 192.168.100.100 -m multiport --sports 137,138,139,445 -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp -d 192.168.100.100 -m multiport --dports 137,138,139,445 -j ACCEPT
+iptables -A INPUT -i "$IF0" -p udp -s 192.168.100.100 -m multiport --sports 137,138,139,445 -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p udp -d 192.168.100.100 -m multiport --dports 137,138,139,445 -j ACCEPT
 
 ### END SMB/CIFS RULES
 ################################################################################
@@ -117,8 +123,8 @@ iptables -A OUTPUT -o eth7 -p udp -d 192.168.100.100 -m multiport --dports 137,1
 ### BEGIN GIT RULES
 
 # git repo lives on port 1111 on 192.168.101.101
-iptables -A OUTPUT -o eth7 -p tcp -d 192.168.101.101 --dport 1111 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p tcp -s 192.168.101.101 --sport 1111 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp -d 192.168.101.101 --dport 1111 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp -s 192.168.101.101 --sport 1111 -m state --state ESTABLISHED -j ACCEPT
 
 ### END GIT RULES
 ################################################################################
@@ -127,11 +133,11 @@ iptables -A INPUT -i eth7 -p tcp -s 192.168.101.101 --sport 1111 -m state --stat
 ################################################################################
 ### BEGIN email RULES
 
-iptables -A OUTPUT -o eth7 -p tcp --dport 25 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p tcp --sport 25 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp --dport 25 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp --sport 25 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-iptables -A OUTPUT -o eth7 -p tcp --dport 587 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth7 -p tcp --sport 587 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o "$IF0" -p tcp --dport 587 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i "$IF0" -p tcp --sport 587 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 ### END email RULES
 ################################################################################

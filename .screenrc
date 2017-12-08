@@ -1,6 +1,9 @@
 # don't display the copyright page
 startup_message off
 
+# change the escape sequence to ctrl+z (the default was ctrl+A)
+escape ^Zz
+
 # keep scrollback n lines
 defscrollback 50000
 
@@ -12,3 +15,7 @@ defbce "on"
 
 # always show the caption bar at the bottom of the terminal for extra info
 caption always
+
+# visual bell
+vbell_msg "bell: window ~%"
+vbellwait 2

@@ -10,6 +10,9 @@ metacity &
 # get the window manager process id
 wm_pid=$!
 
+# make the window manager process id available to kill later if required
+export wm_pid
+
 # wait a little while for the window manager to load (extend this if the
 # terminal is not being properly maximised)
 # sleep 2

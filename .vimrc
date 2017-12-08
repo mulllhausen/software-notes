@@ -30,15 +30,18 @@ endif
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
-"if has("autocmd")
-"  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-"endif
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
 
 " Uncomment the following to have Vim load indentation rules and plugins
 " according to the detected filetype.
 "if has("autocmd")
 "  filetype plugin indent on
 "endif
+
+" solid cursor
+let &t_EI .= "\<Esc>[2 q"
 
 " The following are commented out as they cause vim to behave a lot
 " differently from regular Vi. They are highly recommended though.
@@ -63,10 +66,10 @@ set colorcolumn=80
 highlight colorcolumn ctermbg=7
 
 let php_htmlInStrings=1
-" set guicursor=a:blinkon0 " disable cursor blinking (this may be handled by the terminal already)
-if &term == "linux" " disable cursor blinking in linux terminal (tty)
+set guicursor=a:blinkon0 " disable cursor blinking (this may be handled by the terminal already)
+"if &term =~ "linux\\|screen.linux" " disable cursor blinking in linux terminal (tty)
   set t_ve+=[?16;13;32c " see ~./pretty_bash_prompt for a translation of these numbers
-endif
+"endif
 
 " use 256 colors
 set t_Co=256
