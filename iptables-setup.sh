@@ -10,7 +10,7 @@ fi
 
 firewall_on=true
 
-# delete all rules everything (no ports blocked yet)
+# delete all rules (no ports blocked yet)
 iptables -F
 
 if [ $firewall_on = true ]; then
