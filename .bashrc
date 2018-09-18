@@ -94,9 +94,9 @@ alias brightness="xrandr --output VGA-1 --brightness"
 
 alias GS="git status"
 
-# provide a quick way to logout i can first exit the window manager with this
+# provide a quick way to logout. i can first exit the window manager with this
 # command, then exit the shell from there to logout
-function l() {
+function unx() {
     if [[ ${wm_pid} == "" ]]; then
         echo "unable to kill window manager"
     else
