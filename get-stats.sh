@@ -14,8 +14,8 @@ ls -1 */*test* > test.txt
 # generate a list of all low quality movies
 ls -1 */*lowquality* > lowquality.txt
 
-# generate a list of files by size descending
-find . -type f -exec ls -lhSd {} + > largest.txt
+# generate a list of files (not dirs) with the largest size first
+du -ah * | grep -E "\..{3}$" | sort -rh > largest.txt
 
 # generate a lsit of files with their metadata
 echo "filename,size,duration,vformat,audio format,v profile,video library,v bitrate,v dims,aud profile,audio lib,aud bitrate" > stats.csv
