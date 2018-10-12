@@ -15,6 +15,7 @@
 # convert video to a version of h264 that plays on my tv and audio
 #ffmpeg -i "$1" -acodec mp3 -b:a 192k -vcodec libx264 -sn "x264-$1.mp4"
 
+if false;then
 for f in *.mkv;do
     echo
     echo
@@ -49,3 +50,7 @@ for f in *.mkv;do
     date
 
 done
+fi
+
+# extract subs track $2 from file $1 (the count starts from 0)
+ffmpeg -i "$1" -map 0:s:$2 "$1-track$2.srt"
