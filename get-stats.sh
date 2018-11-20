@@ -18,11 +18,14 @@ ls -1 */*lowquality* > lowquality.txt
 du -ah * | grep -E "\..{3}$" | sort -rh > largest.txt
 
 # generate a lsit of files with their metadata
-echo "filename,size,duration,vformat,audio format,v profile,video library,v bitrate,v dims,aud profile,audio lib,aud bitrate" > stats.csv
+# note: use `mediainfo --Info-Parameters` to get a list of all available parameters
+echo "filename,size,bytes,duration,vformat,audio format,v profile,video library,v bitrate,v dims,aud profile,audio lib,aud bitrate" > stats.csv
 for f in *;do
-    echo -n "\"$f\"" | sed 's/,/;/g' >> stats.csv
-    echo -n "," >> stats.csv
-    mediainfo --Inform="file:///mediainfo.template" "$f" >> stats.csv
+    if [[ -f $f ]];then
+        echo -n "\"$f\"" | sed 's/,/;/g' >> stats.csv
+        echo -n "," >> stats.csv
+        mediainfo --Inform="file:///mediainfo.template" "$f" >> stats.csv
+    fi
 done
 cat stats.csv | column -tns, > stats.columns
 

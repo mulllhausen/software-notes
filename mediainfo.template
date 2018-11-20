@@ -1,3 +1,3 @@
-General;%FileSize/String%,%Duration/String%,%Video_Format_WithHint_List%,%Audio_Format_WithHint_List%,
+General;%FileSize/String%,%FileSize%,%Duration/String%,%Video_Format_WithHint_List%,%Audio_Format_WithHint_List%,
 Video;%Format_Profile%,%Encoded_Library%,%BitRate/String%,%Width% x %Height%,
 Audio;%Format_Profile%,%Encoded_Library%,%BitRate/String%
