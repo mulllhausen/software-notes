@@ -29,5 +29,8 @@ for f in *;do
 done
 cat stats.csv | column -tns, > stats.columns
 
+# find duplicated files
+find . -not -name *.srt -print | cut -d'.' -f2 | sort | uniq -d > duplicates.txt
+
 # copy to clipboard (use middle click to paste)
 cat movies_list.txt | xclip
